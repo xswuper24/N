@@ -680,6 +680,12 @@ AutoFarm.prototype.getVillageUnits = function (callback) {
 AutoFarm.prototype.getPresets = function (callback, presets) {
     __debug && console.log('.getPresets()')
 
+    if (!this.settings.presetName) {
+        this.presets = []
+
+        return true
+    }
+
     if (presets) {
         this.presets = []
 

@@ -403,78 +403,75 @@ AutoFarmInterface.prototype.updateGroupList = function () {
  * Adiciona eventos na interface com base nos eventos do AutoFarm.
  */
 AutoFarmInterface.prototype.bindEvents = function () {
-    this.autofarm.on('sendCommand', (from, to) => {
-        let fromText = `${from.getName()} (${from.getX()}|${from.getY()})`
-        let toText = `${to.name} (${to.coords[0]}|${to.coords[1]})`
+    let events = {
+        sendCommand: (from, to) => {
+            let fromText = `${from.getName()} (${from.getX()}|${from.getY()})`
+            let toText = `${to.name} (${to.coords[0]}|${to.coords[1]})`
 
-        this.addEvent({
-            links: [
-                { type: 'village', name: fromText, id: from.getId() },
-                { type: 'village', name: toText, id: to.id }
-            ],
-            text: this.autofarm.lang.events.sendCommand,
-            icon: 'attack-small'
-        })
+            this.addEvent({
+                links: [
+                    { type: 'village', name: fromText, id: from.getId() },
+                    { type: 'village', name: toText, id: to.id }
+                ],
+                text: this.autofarm.lang.events.sendCommand,
+                icon: 'attack-small'
+            })
 
-        this.$status.html(this.autofarm.lang.events.attacking)
-        this.updateLastAttack(Date.now())
-    })
+            this.$status.html(this.autofarm.lang.events.attacking)
+            this.updateLastAttack(Date.now())
+        },
+        nextVillage: (next) => {
+            let nextText = `${next.getName()} (${next.getX()}|${next.getY()})`
 
-    this.autofarm.on('nextVillage', (next) => {
-        let nextText = `${next.getName()} (${next.getX()}|${next.getY()})`
+            this.addEvent({
+                links: [
+                    { type: 'village', name: nextText, id: next.getId() }
+                ],
+                icon: 'village',
+                text: this.autofarm.lang.events.nextVillage
+            })
 
-        this.addEvent({
-            links: [
-                { type: 'village', name: nextText, id: next.getId() }
-            ],
-            icon: 'village',
-            text: this.autofarm.lang.events.nextVillage
-        })
+            this.updateSelectedVillage()
+        },
+        noPreset: () => {
+            this.addEvent({
+                icon: 'info',
+                text: this.autofarm.lang.events.noPreset
+            })
 
-        this.updateSelectedVillage()
-    })
-
-    this.autofarm.on('noPreset', () => {
-        this.addEvent({
-            icon: 'info',
-            text: this.autofarm.lang.events.noPreset
-        })
-
-        this.$status.html(this.autofarm.lang.events.paused)
-        this.autofarm.pause()
-    })
-
-    this.autofarm.on('commandLimit', () => {
-        if (this.autofarm.uniqueVillage) {
-            this.$status.html(this.autofarm.lang.events.commandLimit)
+            this.$status.html(this.autofarm.lang.events.paused)
+            this.autofarm.pause()
+        },
+        commandLimit: () => {
+            if (this.autofarm.uniqueVillage) {
+                this.$status.html(this.autofarm.lang.events.commandLimit)
+            }
+        },
+        noUnits: () => {
+            if (this.autofarm.uniqueVillage) {
+                this.$status.html(this.autofarm.lang.events.noUnits)
+            }
+        },
+        noUnitsNoCommands: () => {
+            this.$status.html(this.autofarm.lang.events.noUnitsNoCommands)
+        },
+        start: () => {
+            this.$status.html(this.autofarm.lang.events.attacking)
+        },
+        pause: () => {
+            this.$status.html(this.autofarm.lang.events.paused)
+        },
+        noVillages: () => {
+            this.$status.html(this.autofarm.lang.events.noVillages)
+        },
+        playerVillagesUpdate: () => {
+            this.updateSelectedVillage()
         }
-    })
+    }
 
-    this.autofarm.on('noUnits', () => {
-        if (this.autofarm.uniqueVillage) {
-            this.$status.html(this.autofarm.lang.events.noUnits)
-        }
-    })
-
-    this.autofarm.on('noUnitsNoCommands', () => {
-        this.$status.html(this.autofarm.lang.events.noUnitsNoCommands)
-    })
-
-    this.autofarm.on('start', () => {
-        this.$status.html(this.autofarm.lang.events.attacking)
-    })
-
-    this.autofarm.on('pause', () => {
-        this.$status.html(this.autofarm.lang.events.paused)
-    })
-
-    this.autofarm.on('noVillages', () => {
-        this.$status.html(this.autofarm.lang.events.noVillages)
-    })
-
-    this.autofarm.on('playerVillagesUpdate', () => {
-        this.updateSelectedVillage()
-    })
+    for (let type in events) {
+        this.autofarm.on(type, events[type])
+    }
 }
 
 /**

@@ -1,5 +1,8 @@
 # History
 
+## Next
+- [New] Opção para alterar linguagem da interface.
+
 ## 0.11.0beta 08/04/2017
 - [New] Opção para incluir alvos de jogadores a partir de grupos.
 - [Fix] Problema com funcionamento continuo arrumado.

@@ -3,7 +3,7 @@
     "general": {
         "info": "Informações",
         "settings": "Configurações",
-        "tasklogs": "Eventos",
+        "events": "Eventos",
         "start": "Iniciar",
         "pause": "Pausar",
         "none": "Nenhum",
@@ -43,9 +43,11 @@
         "presetName": "Predefinição das tropas",
         "groupIgnore": "Ignorar aldeias do grupo",
         "groupInclude": "Incluir alvos do grupo",
-        "eventsLimit": "Número máximo de registros"
+        "eventsLimit": "Número máximo de registros",
+        "others": "Outros",
+        "language": "Linguagem da interface (requer reinício)"
     },
-    "tasklogs": {
+    "events": {
         "nothingYet": "Nada por aqui ainda...",
         "sendCommand": "{0} ataca {1}",
         "nextVillage": "Alternando para a aldeia {0}",

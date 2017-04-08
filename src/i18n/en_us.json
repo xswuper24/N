@@ -43,7 +43,9 @@
         "presetName": "Preset of troops",
         "groupIgnore": "Ignore villages from group",
         "groupInclude": "Include targets from group",
-        "eventsLimit": "Maximum length of events"
+        "eventsLimit": "Maximum length of events",
+        "others": "Others",
+        "language": "Interface language (require restart)"
     },
     "events": {
         "nothingYet": "Nothing available yet...",

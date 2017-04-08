@@ -15,7 +15,11 @@ AutoFarm.prototype.i18n = function () {
         gameLang = aliases[gameLang]
     }
 
-    this.lang = gameLang in locales
-        ? locales[gameLang]
-        : locales['en_us']
+    if (this.settings.language) {
+        this.lang = locales[this.settings.language]
+    } else {
+        this.lang = gameLang in locales
+            ? locales[gameLang]
+            : locales['en_us']
+    }
 }

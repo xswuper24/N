@@ -55,9 +55,10 @@ function AutoFarm (settings = {}) {
         randomBase: '3',
         presetName: '',
         groupIgnore: '',
+        groupInclude: '',
         currentOnly: false,
         eventsLimit: '20',
-        groupInclude: ''
+        language: ''
     }
 
     /**

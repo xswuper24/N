@@ -45,6 +45,8 @@ function AutoFarmInterface (autofarm) {
         this.openWindow()
     })
 
+
+
     return this
 }
 
@@ -101,6 +103,7 @@ AutoFarmInterface.prototype.buildWindow = function () {
     this.$preset = $('#presetName')
     this.$groupIgnore = $('#groupIgnore')
     this.$groupInclude = $('#groupInclude')
+    this.$language = $('#autofarm-language')
 
     let selected = this.autofarm.selectedVillage
     let selectedVillage = AutoFarmInterface.createButtonLink(
@@ -223,6 +226,10 @@ AutoFarmInterface.prototype.bindSettings = function () {
         let name = $input[0].name
 
         if (type === 'select-one') {
+            if (name === 'language') {
+                $input[0].value = this.autofarm.settings.language
+            }
+
             return
         }
 

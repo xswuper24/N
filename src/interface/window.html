@@ -118,7 +118,7 @@
                     </tbody>
                 </table>
 
-                <h5 class="twx-section">{{ events }}</h5>
+                <h5 class="twx-section">{{ others }}</h5>
 
                 <table class="tbl-border-light tbl-striped">
                     <colgroup>
@@ -129,6 +129,15 @@
                         <tr>
                             <td><span class="ff-cell-fix">{{ eventsLimit }}</span></td>
                             <td><input name="eventsLimit" type="number" class="textfield-border" min="1" required></td>
+                        </tr>
+                        <tr>
+                            <td><span class="ff-cell-fix">{{ language }}</span></td>
+                            <td>
+                                <select name="language" id="autofarm-language">
+                                    <option value="en_us">English</option>
+                                    <option value="pt_br">Português</option>
+                                </select>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

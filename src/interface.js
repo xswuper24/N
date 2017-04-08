@@ -375,46 +375,27 @@ AutoFarmInterface.prototype.updatePresetList = function () {
  * Atualiza a lista de grupos na aba de configurações.
  */
 AutoFarmInterface.prototype.updateGroupList = function () {
+    let types = ['groupIgnore', 'groupInclude', 'groupOnly']
     let groups = modelDataService.getGroupList().getGroups()
 
-    this.$groupIgnore.html(
-        `<option value="">${this.autofarm.lang.general.disabled}</option>`
-    )
+    for (let type of types) {
+        let $type = '$' + type
 
-    this.$groupInclude.html(
-        `<option value="">${this.autofarm.lang.general.disabled}</option>`
-    )
-
-    this.$groupOnly.html(
-        `<option value="">${this.autofarm.lang.general.disabled}</option>`
-    )
-
-    for (let id in groups) {
-        let name = groups[id].name
-
-        let ignoreSelected = this.autofarm.settings.groupIgnore === name
-            ? 'selected'
-            : ''
-
-        let includeSelected = this.autofarm.settings.groupInclude === name
-            ? 'selected'
-            : ''
-
-        let onlySelected = this.autofarm.settings.groupOnly === name
-            ? 'selected'
-            : ''
-
-        this.$groupIgnore.append(
-            `<option value="${name}" ${ignoreSelected}>${name}</option>`
+        this[$type].html(
+            `<option value="">${this.autofarm.lang.general.disabled}</option>`
         )
 
-        this.$groupInclude.append(
-            `<option value="${name}" ${includeSelected}>${name}</option>`
-        )
+        for (let groupId in groups) {
+            let name = groups[groupId].name
 
-        this.$groupOnly.append(
-            `<option value="${name}" ${onlySelected}>${name}</option>`
-        )
+            let selected = this.autofarm.settings[type] === name
+                ? 'selected'
+                : ''
+
+            this[$type].append(
+                `<option value="${name}" ${selected}>${name}</option>`
+            )
+        }
     }
 }
 

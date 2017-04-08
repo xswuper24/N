@@ -738,57 +738,24 @@ AutoFarm.cleanPresetUnits = function (units) {
 AutoFarm.prototype.updateExceptionGroups = function () {
     __debug && console.log('.updateExceptionGroups()')
 
-    let ignoreUpdated = false
-    let includeUpdated = false
-    let onlyUpdated = false
-
+    let types = ['groupIgnore', 'groupIgnore', 'groupOnly']
     let groups = modelDataService.getGroupList().getGroups()
 
-    for (let id in groups) {
-        if (!ignoreUpdated) {
-            if (groups[id].name === this.settings.groupIgnore) {
-                this.groupIgnore = {
-                    id: id,
-                    name: groups[id].name
+    for (let type of types) {
+        this[type] = null
+
+        for (let groupId in groups) {
+            let group = groups[groupId]
+
+            if (group.name === this.settings[type]) {
+                this[type] = {
+                    name: group.name,
+                    id: group.id
                 }
 
-                ignoreUpdated = true
+                break
             }
         }
-
-        if (!includeUpdated) {
-            if (groups[id].name === this.settings.groupInclude) {
-                this.groupInclude = {
-                    id: id,
-                    name: groups[id].name
-                }
-
-                includeUpdated = true
-            }
-        }
-
-        if (!onlyUpdated) {
-            if (groups[id].name === this.settings.groupOnly) {
-                this.groupOnly = {
-                    id: id,
-                    name: groups[id].name
-                }
-
-                onlyUpdated = true
-            }
-        }
-    }
-
-    if (!ignoreUpdated) {
-        this.groupIgnore = null
-    }
-
-    if (!includeUpdated) {
-        this.groupInclude = null
-    }
-
-    if (!onlyUpdated) {
-        this.groupOnly = null
     }
 }
 

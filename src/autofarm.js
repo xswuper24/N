@@ -213,7 +213,7 @@ AutoFarm.prototype.pause = function (silent) {
         this.event('pause')
     }
 
-    clearTimeout(this.timerId)
+    clearTimeout(this.commandTimerId)
     clearTimeout(this.keepRunningId)
 
     return true
@@ -231,7 +231,7 @@ AutoFarm.prototype.keepRunning = function () {
     clearTimeout(this.keepRunningId)
 
     this.keepRunningId = setTimeout(() => {
-        if (this.timerId) {
+        if (this.commandTimerId) {
             this.keepRunning()
         } else {
             this.commandInit()
@@ -738,7 +738,7 @@ AutoFarm.cleanPresetUnits = function (units) {
 AutoFarm.prototype.updateExceptionGroups = function () {
     __debug && console.log('.updateExceptionGroups()')
 
-    let types = ['groupIgnore', 'groupIgnore', 'groupOnly']
+    let types = ['groupIgnore', 'groupInclude', 'groupOnly']
     let groups = modelDataService.getGroupList().getGroups()
 
     for (let type of types) {
@@ -767,18 +767,17 @@ AutoFarm.prototype.updateExceptionVillages = function () {
 
     let groupList = modelDataService.getGroupList()
 
+    this.ignoredVillages = []
+    this.includedVillages = []
+
     if (this.groupIgnore) {
         this.ignoredVillages =
             groupList.getGroupVillageIds(this.groupIgnore.id)
-    } else {
-        this.ignoredVillages = []
     }
 
     if (this.groupInclude) {
         this.includedVillages =
             groupList.getGroupVillageIds(this.groupInclude.id)
-    } else {
-        this.includedVillages = []
     }
 }
 
@@ -949,8 +948,8 @@ AutoFarm.prototype.commandInit = function () {
                 let backTime = this.villagesNextReturn[sid]
                 let randomTime = AutoFarm.randomSeconds(5) * 1000
 
-                this.timerId = setTimeout(() => {
-                    this.timerId = false
+                this.commandTimerId = setTimeout(() => {
+                    this.commandTimerId = false
 
                     this.commandInit()
                 }, backTime + randomTime)
@@ -994,8 +993,8 @@ AutoFarm.prototype.commandInit = function () {
                 interval = AutoFarm.randomSeconds(this.settings.randomBase)
                 interval *= 1000
 
-                this.timerId = setTimeout(() => {
-                    this.timerId = false
+                this.commandTimerId = setTimeout(() => {
+                    this.commandTimerId = false
 
                     this.commandInit()
                 }, interval)
@@ -1045,8 +1044,8 @@ AutoFarm.prototype.commandVillageNoUnits = function (commands) {
 
         let backTime = this.getNeabyCommand(commands)
 
-        this.timerId = setTimeout(() => {
-            this.timerId = false
+        this.commandTimerId = setTimeout(() => {
+            this.commandTimerId = false
 
             this.commandInit()
         }, backTime)
@@ -1101,8 +1100,8 @@ AutoFarm.prototype.commandNextReturn = function () {
 
     let next = this.nextVillageUnits()
 
-    this.timerId = setTimeout(() => {
-        this.timerId = false
+    this.commandTimerId = setTimeout(() => {
+        this.commandTimerId = false
         
         this.selectVillage(next.vid)
         this.commandInit()

@@ -8,7 +8,8 @@
         "pause": "Pause",
         "none": "None",
         "started": "AutoFarm started.",
-        "paused": "AutoFarm paused."
+        "paused": "AutoFarm paused.",
+        "disabled": "Disabled"
     },
     "info": {
         "presets": "Presets Settings",
@@ -23,9 +24,8 @@
         "include_1": "As well as ignoring villages, you can include village targets of players. All villages out of maximum distance will be ignored.",
         "randomBase": "Random interval base",
         "randomBase_1": "That interval is a random period of time between each attack avoid the script to be detected by the game. <strong>The bigger the better</strong>.",
-        "selected": "Selected only",
-        "selected_1": "With this option activated, only the village that has already selected will be used to send attacks, blocking the script to select other villages.",
-        "selected_2": "Even if you select another village, the attacks will keep sending from the same village. Unless you pause the script and start it again.",
+        "groupOnly_0": "Using only villages from a group to attack",
+        "groupOnly_1": "You can select a specific group to use only the villages from that group to attack.",
         "development": "Development",
         "development_by": "AutoFarm is developed with <span style='color:#ad0202'>❤</span> by",
         "development_open": "AutoFarm is a <a href='https://github.com/mafrazz/tw2autofarm'>open source</a> software.",
@@ -39,13 +39,13 @@
         "minDistance": "Targets minimum distance",
         "maxTravelTime": "Maximum travel time (going)",
         "randomBase": "Random interval base",
-        "currentOnly": "Use only the selected village",
         "presetName": "Preset of troops",
         "groupIgnore": "Ignore villages from group",
         "groupInclude": "Include targets from group",
         "eventsLimit": "Maximum length of events",
         "others": "Others",
-        "language": "Interface language (require restart)"
+        "language": "Interface language (require restart)",
+        "groupOnly": "Attack only with villages from group"
     },
     "events": {
         "nothingYet": "Nothing available yet...",
@@ -61,6 +61,7 @@
         "status": "Status",
         "selectedVillage": "Village selected",
         "lastAttack": "Last attack",
-        "attacking": "Attacking."
+        "attacking": "Attacking.",
+        "noSelectedVillage": "No villages avaliable."
     }
 }

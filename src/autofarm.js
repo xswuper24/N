@@ -15,7 +15,7 @@ routeProvider = injector.get('routeProvider')
 eventTypeProvider = injector.get('eventTypeProvider')
 armyService = injector.get('armyService')
 math = require('helper/math')
-pid = modelDataService.getSelectedCharacter().getId()
+player = modelDataService.getSelectedCharacter()
 
 __debug = true
 
@@ -31,8 +31,6 @@ __debug = true
  * @param {String} settings.presetName - Nome do preset usado para os comandos.
  * @param {String} settings.groupIgnore - Nome do grupo usado nas aldeias a
  *     serem ignoradas.
- * @param {Boolean} settings.currentOnly - Apenas a aldeia selecionada será
- *     usada para enviar comandos.
  * @param {Number} settings.eventsLimit - Limite de registros na aba Eventos.
  * @param {String} settings.groupInclude - Nome do grupo que permite alvos
  *     que não sejam abandonadas sejam atacados.
@@ -56,7 +54,7 @@ function AutoFarm (settings = {}) {
         presetName: '',
         groupIgnore: '',
         groupInclude: '',
-        currentOnly: false,
+        groupOnly: '',
         eventsLimit: '20',
         language: ''
     }
@@ -68,11 +66,10 @@ function AutoFarm (settings = {}) {
     this.settings = angular.merge({}, this.defaults, settings)
 
     /**
-     * Objeto com todos os dados do jogador.
-     * @type {Object}
+     * Lista com as aldeias que serão usadas pelo script.
+     * @type {Array}
      */
-    this.player = modelDataService.getSelectedCharacter()
-    this.player.villages = Object.values(this.player.data.villages)
+    this.villages = null
 
     /**
      * Identifica o status do script.
@@ -81,16 +78,16 @@ function AutoFarm (settings = {}) {
     this.paused = true
 
     /**
-     * Identifica se o jogador possui apenas uma aldeia.
+     * Identifica se o jogador possui apenas uma aldeia disponível para atacar.
      * @type {Boolean}
      */
-    this.uniqueVillage = this.player.villages.length === 1
+    this.uniqueVillage = null
 
     /**
-     * Aldeia atualmente seleciona.
+     * Aldeia atualmente selecionada pronto para enviar os ataques.
      * @type {Object}
      */
-    this.selectedVillage = modelDataService.getSelectedVillage()
+    this.selectedVillage = null
 
     /**
      * Lista de todos aldeias alvos possíveis para cada aldeia do jogador.
@@ -165,8 +162,16 @@ function AutoFarm (settings = {}) {
      */
     this.includedVillages = []
 
+    /**
+     * Objeto do group de referência para filtrar aldeias usadas pelo script.
+     * Contém ID e nome do grupo.
+     * @type {Object}
+     */
+    this.groupOnly = null
+
     this.updateExceptionGroups()
     this.updateExceptionVillages()
+    this.updatePlayerVillages()
     this.gameListeners()
     this.i18n()
     this.getPresets(false)
@@ -178,7 +183,7 @@ function AutoFarm (settings = {}) {
  * Inicia os comandos.
  * @return {Boolean}
  */
-AutoFarm.prototype.start = function () {
+AutoFarm.prototype.start = function (silent) {
     if (!this.presets.length) {
         this.event('noPreset')
 
@@ -186,9 +191,12 @@ AutoFarm.prototype.start = function () {
     }
 
     this.paused = false
-    this.event('start')
-    this.commandInit()
 
+    if (!silent) {
+        this.event('start')
+    }
+
+    this.commandInit()
     this.keepRunning()
 
     return true
@@ -198,9 +206,12 @@ AutoFarm.prototype.start = function () {
  * Pausa os comandos.
  * @return {Boolean}
  */
-AutoFarm.prototype.pause = function () {
+AutoFarm.prototype.pause = function (silent) {
     this.paused = true
-    this.event('pause')
+    
+    if (!silent) {
+        this.event('pause')
+    }
 
     clearTimeout(this.timerId)
     clearTimeout(this.keepRunningId)
@@ -234,22 +245,26 @@ AutoFarm.prototype.keepRunning = function () {
  * @param {Object} changes - Novas configurações.
  */
 AutoFarm.prototype.updateSettings = function (changes) {
-    this.disableEvents()
-
     let restart = false
     let update = {}
 
     if (!this.paused) {
         restart = true
-        this.pause()
+        this.pause(true)
     }
 
     if (changes.groupIgnore !== this.settings.groupIgnore) {
-        update.groupIgnore = true
+        update.groups = true
     }
 
     if (changes.groupInclude !== this.settings.groupInclude) {
-        update.groupInclude = true
+        update.groups = true
+        update.targets = true
+    }
+
+    if (changes.groupOnly !== this.settings.groupOnly) {
+        update.groups = true
+        update.villages = true
         update.targets = true
     }
 
@@ -269,9 +284,13 @@ AutoFarm.prototype.updateSettings = function (changes) {
         this.settings[key] = changes[key]
     }
 
-    if (update.groupIgnore || update.groupInclude) {
+    if (update.groups) {
         this.updateExceptionGroups()
         this.updateExceptionVillages()
+    }
+
+    if (update.villages) {
+        this.updatePlayerVillages()
     }
 
     if (update.preset) {
@@ -283,10 +302,8 @@ AutoFarm.prototype.updateSettings = function (changes) {
     }
 
     if (restart) {
-        this.start()
+        this.start(true)
     }
-
-    this.enableEvents()
 }
 
 /**
@@ -447,22 +464,22 @@ AutoFarm.prototype.getTargets = function (callback) {
 AutoFarm.prototype.nextVillage = function (_loop = 0) {
     __debug && console.log('.nextVillage()')
 
-    if (this.uniqueVillage || this.settings.currentOnly) {
+    if (this.uniqueVillage) {
         return false
     }
 
-    if (_loop === this.player.villages.length) {
+    if (_loop === this.villages.length) {
         this.event('noVillages')
 
         return false
     }
 
-    let nextIndex = this.player.villages.indexOf(this.selectedVillage) + 1
+    let nextIndex = this.villages.indexOf(this.selectedVillage) + 1
 
     this.selectedVillage =
-        typeof this.player.villages[nextIndex] !== 'undefined'
-            ? this.player.villages[nextIndex]
-            : this.player.villages[0]
+        typeof this.villages[nextIndex] !== 'undefined'
+            ? this.villages[nextIndex]
+            : this.villages[0]
 
     if (this.ignoredVillages.includes(this.selectedVillage.getId())) {
         return this.nextVillage(++_loop)
@@ -485,10 +502,10 @@ AutoFarm.prototype.nextVillage = function (_loop = 0) {
 AutoFarm.prototype.selectVillage = function (vid) {
     __debug && console.log('.selectVillage()')
 
-    let i = this.player.villages.indexOf(vid)
+    let i = this.villages.indexOf(vid)
 
     if (i !== -1) {
-        this.selectedVillage = this.player.villages[i]
+        this.selectedVillage = this.villages[i]
         this.firstFirstTarget()
 
         return true
@@ -717,6 +734,7 @@ AutoFarm.prototype.updateExceptionGroups = function () {
 
     let ignoreUpdated = false
     let includeUpdated = false
+    let onlyUpdated = false
 
     let groups = modelDataService.getGroupList().getGroups()
 
@@ -742,6 +760,17 @@ AutoFarm.prototype.updateExceptionGroups = function () {
                 includeUpdated = true
             }
         }
+
+        if (!onlyUpdated) {
+            if (groups[id].name === this.settings.groupOnly) {
+                this.groupOnly = {
+                    id: id,
+                    name: groups[id].name
+                }
+
+                onlyUpdated = true
+            }
+        }
     }
 
     if (!ignoreUpdated) {
@@ -750,6 +779,10 @@ AutoFarm.prototype.updateExceptionGroups = function () {
 
     if (!includeUpdated) {
         this.groupInclude = null
+    }
+
+    if (!onlyUpdated) {
+        this.groupOnly = null
     }
 }
 
@@ -763,7 +796,7 @@ AutoFarm.prototype.updateExceptionVillages = function () {
 
     if (this.groupIgnore) {
         this.ignoredVillages =
-            groupList.getGroupVillageIds(this.groupIgnore.id)   
+            groupList.getGroupVillageIds(this.groupIgnore.id)
     } else {
         this.ignoredVillages = []
     }
@@ -774,6 +807,34 @@ AutoFarm.prototype.updateExceptionVillages = function () {
     } else {
         this.includedVillages = []
     }
+}
+
+/**
+ * Atualiza a lista de aldeias do jogador e filtra com base nos grupos (caso
+ * estaja configurado...).
+ */
+AutoFarm.prototype.updatePlayerVillages = function () {
+    __debug && console.log('.updatePlayerVillages()')
+
+    let allVillages = player.getVillageList()
+
+    if (this.groupOnly) {
+        let groupList = modelDataService.getGroupList()
+        let groupVillages = groupList.getGroupVillageIds(this.groupOnly.id)
+
+        this.villages = allVillages.filter((village) => {
+            return groupVillages.includes(village.getId())
+        })
+
+        this.uniqueVillage = this.villages.length === 1
+        this.selectedVillage = this.villages[0]
+    } else {
+        this.villages = allVillages
+        this.uniqueVillage = allVillages.length === 1
+        this.selectedVillage = allVillages[0]
+    }
+
+    this.event('playerVillagesUpdate')
 }
 
 /**
@@ -844,6 +905,12 @@ AutoFarm.prototype.commandInit = function () {
         return false
     }
 
+    if (!this.selectedVillage) {
+        this.event('noVillageSelected')
+
+        return false
+    }
+
     let sid = this.selectedVillage.getId()
 
     // Se aldeia ainda não tiver obtido a lista de alvos, obtem
@@ -876,6 +943,7 @@ AutoFarm.prototype.commandInit = function () {
         if (hasVillages) {
             this.commandInit()
         } else {
+            this.event('commandLimit')
             this.commandNextReturn()
         }
 
@@ -904,7 +972,7 @@ AutoFarm.prototype.commandInit = function () {
             // Se o jogador tiver apenas uma aldeia, o script
             // aguardará o retorno do comando mais próximo e
             // reinicia a função.
-            if (this.uniqueVillage || this.settings.currentOnly) {
+            if (this.uniqueVillage) {
                 let backTime = this.villagesNextReturn[sid]
                 let randomTime = AutoFarm.randomSeconds(5) * 1000
 
@@ -997,7 +1065,7 @@ AutoFarm.prototype.getNextReturn = function (commands) {
 AutoFarm.prototype.commandVillageNoUnits = function (commands) {
     __debug && console.log('.commandVillageNoUnits()')
 
-    if (this.uniqueVillage || this.settings.currentOnly) {
+    if (this.uniqueVillage) {
         if (!commands.length) {
             return this.event('noUnitsNoCommands')
         }

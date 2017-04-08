@@ -1,5 +1,5 @@
 if (typeof autofarm === 'undefined') {
-    let settings = localStorage.getItem(`${pid}_autofarm`)
+    let settings = localStorage.getItem(`${player.getId()}_autofarm`)
     settings = settings ? JSON.parse(settings) : {}
 
     autofarm = new AutoFarm(settings)
@@ -36,9 +36,16 @@ if (typeof autofarm === 'undefined') {
     let startFarm = function () {
         if (autofarm.paused) {
             if (!autofarm.presets.length) {
-
                 $rootScope.$broadcast(eventTypeProvider.MESSAGE_ERROR, {
                     message: autofarm.lang.events.presetFirst
+                })
+
+                return false
+            }
+
+            if (!autofarm.selectedVillage) {
+                $rootScope.$broadcast(eventTypeProvider.MESSAGE_ERROR, {
+                    message: autofarm.lang.events.noSelectedVillage
                 })
 
                 return false

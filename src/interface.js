@@ -103,23 +103,46 @@ AutoFarmInterface.prototype.buildWindow = function () {
     this.$preset = $('#presetName')
     this.$groupIgnore = $('#groupIgnore')
     this.$groupInclude = $('#groupInclude')
+    this.$groupOnly = $('#groupOnly')
     this.$language = $('#autofarm-language')
 
+    this.updateLastAttack()
+    this.updateSelectedVillage()
+}
+
+AutoFarmInterface.prototype.updateLastAttack = function (lastAttack) {
+    if (!lastAttack) {
+        lastAttack = localStorage[`${player.getId()}_autofarm_lastAttack`]
+
+        if (!lastAttack) {
+            return
+        }
+    } else {
+        localStorage[`${player.getId()}_autofarm_lastAttack`] = lastAttack
+    }
+
+    lastAttack = parseInt(lastAttack, 10)
+
+    this.$last.html($filter('readableDateFilter')(lastAttack))
+}
+
+AutoFarmInterface.prototype.updateSelectedVillage = function () {
     let selected = this.autofarm.selectedVillage
+
+    if (!selected) {
+        this.$selected.html(this.autofarm.lang.general.none)
+
+        return false
+    }
+
     let selectedVillage = AutoFarmInterface.createButtonLink(
         'village',
         `${selected.getName()} (${selected.getX()}|${selected.getY()})`,
         this.autofarm.selectedVillage.getId()
     )
 
+    this.$selected.html('')
     this.$selected.append(selectedVillage.elem)
-
-    let lastAttack = localStorage[`${pid}_autofarm_lastAttack`]
-
-    if (lastAttack) {
-        lastAttack = parseInt(lastAttack, 10)
-        this.$last.html($filter('readableDateFilter')(lastAttack))
-    }
 }
 
 /**
@@ -218,7 +241,6 @@ AutoFarmInterface.prototype.eachSetting = function (callback) {
  */
 AutoFarmInterface.prototype.bindSettings = function () {
     let checkedClass = 'icon-26x26-checkbox-checked'
-    let playerId = this.autofarm.player.getId()
 
     // Insere os valores nas entradas
     this.eachSetting(($input) => {
@@ -265,7 +287,7 @@ AutoFarmInterface.prototype.bindSettings = function () {
             this.autofarm.updateSettings(settings)
 
             let jsonSettings = JSON.stringify(settings)
-            localStorage[`${playerId}_autofarm`] = jsonSettings
+            localStorage[`${player.getId()}_autofarm`] = jsonSettings
 
             $rootScope.$broadcast(eventTypeProvider.MESSAGE_SUCCESS, {
                 message: this.autofarm.lang.settings.saved
@@ -327,7 +349,7 @@ AutoFarmInterface.prototype.updatePresetList = function () {
     let presets = modelDataService.getPresetList().presets
 
     this.$preset.html(
-        `<option value="">${this.autofarm.lang.general.none}</option>`
+        `<option value="">${this.autofarm.lang.general.disabled}</option>`
     )
 
     for (let id in presets) {
@@ -356,11 +378,15 @@ AutoFarmInterface.prototype.updateGroupList = function () {
     let groups = modelDataService.getGroupList().getGroups()
 
     this.$groupIgnore.html(
-        `<option value="">${this.autofarm.lang.general.none}</option>`
+        `<option value="">${this.autofarm.lang.general.disabled}</option>`
     )
 
     this.$groupInclude.html(
-        `<option value="">${this.autofarm.lang.general.none}</option>`
+        `<option value="">${this.autofarm.lang.general.disabled}</option>`
+    )
+
+    this.$groupOnly.html(
+        `<option value="">${this.autofarm.lang.general.disabled}</option>`
     )
 
     for (let id in groups) {
@@ -374,12 +400,20 @@ AutoFarmInterface.prototype.updateGroupList = function () {
             ? 'selected'
             : ''
 
+        let onlySelected = this.autofarm.settings.groupOnly === name
+            ? 'selected'
+            : ''
+
         this.$groupIgnore.append(
             `<option value="${name}" ${ignoreSelected}>${name}</option>`
         )
 
         this.$groupInclude.append(
             `<option value="${name}" ${includeSelected}>${name}</option>`
+        )
+
+        this.$groupOnly.append(
+            `<option value="${name}" ${onlySelected}>${name}</option>`
         )
     }
 }
@@ -401,12 +435,8 @@ AutoFarmInterface.prototype.bindEvents = function () {
             icon: 'attack-small'
         })
 
-        let now = Date.now()
-
-        this.$last.html($filter('readableDateFilter')(now))
         this.$status.html(this.autofarm.lang.events.attacking)
-
-        localStorage[`${pid}_autofarm_lastAttack`] = now
+        this.updateLastAttack(Date.now())
     })
 
     this.autofarm.on('nextVillage', (next) => {
@@ -420,14 +450,7 @@ AutoFarmInterface.prototype.bindEvents = function () {
             text: this.autofarm.lang.events.nextVillage
         })
 
-        let selectedVillage = AutoFarmInterface.createButtonLink(
-            'village',
-            nextText,
-            next.getId()
-        )
-
-        this.$selected.html('')
-        this.$selected.append(selectedVillage.elem)
+        this.updateSelectedVillage()
     })
 
     this.autofarm.on('noPreset', () => {
@@ -437,16 +460,17 @@ AutoFarmInterface.prototype.bindEvents = function () {
         })
 
         this.$status.html(this.autofarm.lang.events.paused)
+        this.autofarm.pause()
     })
 
     this.autofarm.on('commandLimit', () => {
-        if (this.autofarm.uniqueVillage || this.autofarm.settings.currentOnly) {
+        if (this.autofarm.uniqueVillage) {
             this.$status.html(this.autofarm.lang.events.commandLimit)
         }
     })
 
     this.autofarm.on('noUnits', () => {
-        if (this.autofarm.uniqueVillage || this.autofarm.settings.currentOnly) {
+        if (this.autofarm.uniqueVillage) {
             this.$status.html(this.autofarm.lang.events.noUnits)
         }
     })
@@ -465,6 +489,10 @@ AutoFarmInterface.prototype.bindEvents = function () {
 
     this.autofarm.on('noVillages', () => {
         this.$status.html(this.autofarm.lang.events.noVillages)
+    })
+
+    this.autofarm.on('playerVillagesUpdate', () => {
+        this.updateSelectedVillage()
     })
 }
 

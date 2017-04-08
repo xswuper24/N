@@ -50,10 +50,9 @@
             <div>
                 <p>{{ randomBase_1 }}</p>
             </div>
-            <h5 class="twx-section">{{ selected }}</h5>
+            <h5 class="twx-section">{{ groupOnly_0 }}</h5>
             <div>
-                <p>{{ selected_1 }}</p>
-                <p>{{ selected_2 }}</p>
+                <p>{{ groupOnly_1 }}</p>
             </div>
             <h5 class="twx-section">{{ development }}</h5>
             <div class="text-center">
@@ -92,6 +91,12 @@
                             </td>
                         </tr>
                         <tr>
+                            <td><span class="ff-cell-fix">{{ groupOnly }}</span></td>
+                            <td>
+                                <select name="groupOnly" id="groupOnly"></select>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><span class="ff-cell-fix">{{ maxDistance }}</span></td>
                             <td><input name="maxDistance" type="number" class="textfield-border" min="1" max="25" required></td>
                         </tr>
@@ -106,14 +111,6 @@
                         <tr>
                             <td><span class="ff-cell-fix">{{ randomBase }}</span></td>
                             <td><input name="randomBase" type="number" class="textfield-border" min="0" required></td>
-                        </tr>
-                        <tr>
-                            <td><span class="ff-cell-fix">{{ currentOnly }}</span></td>
-                            <td>
-                                <label class="size-34x34 btn-orange icon-26x26-checkbox" for="settings-currentOnly">
-                                    <input id="settings-currentOnly" type="checkbox" name="currentOnly">
-                                </label>
-                            </td>
                         </tr>
                     </tbody>
                 </table>

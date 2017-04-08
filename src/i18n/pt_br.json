@@ -8,7 +8,8 @@
         "pause": "Pausar",
         "none": "Nenhum",
         "started": "AutoFarm iniciado.",
-        "paused": "AutoFarm pausado."
+        "paused": "AutoFarm pausado.",
+        "disabled": "Desativado"
     },
     "info": {
         "presets": "Configurando unidades com predefinições",
@@ -23,9 +24,8 @@
         "include_1": "Assim como ignorar aldeias, você pode incluir como alvos aldeias de jogadores. Todas aldeias do grupo que estiverem fora da distância máxima não seram incluidas.",
         "randomBase": "Base do intervalo aleatório",
         "randomBase_1": "Esse intervalo é usado para gerar um tempo aleatório entre cada ataque evitando o script ser detectado. <strong>Quanto maior melhor</strong>.",
-        "selected": "Usando apenas uma aldeia para atacar",
-        "selected_1": "Você pode ativar a opção \"Apenas selecionada\" para usar apenas a aldeia que está atualmente selecionada será usada para enviar os ataques, impedindo o script de selecionar a próxima aldeia.",
-        "selected_2": "Quando esta opção estiver ativa e o script executando, mesmo que você selecione outra aldeia, os ataques continuarão enviando a partir da mesma aldeia. Ao menos que você pause e inicie o script novamente.",
+        "groupOnly_0": "Usando apenas aldeias de um grupo para atacar",
+        "groupOnly_1": "Você pode selecionar um grupo especifico para usar apenas as aldeias desse grupo para enviar os ataques.",
         "development": "Desenvolvimento",
         "development_by": "AutoFarm é desenvolvido com <span style='color:#ad0202'>❤</span> por",
         "development_open": "AutoFarm é um software de <a href='https://github.com/mafrazz/tw2autofarm'>código aberto</a>.",
@@ -39,13 +39,13 @@
         "minDistance": "Distância mínima dos alvos",
         "maxTravelTime": "Tempo máximo de viagem (ida)",
         "randomBase": "Base do intervalo aleatório",
-        "currentOnly": "Usar apenas aldeia selecionada",
         "presetName": "Predefinição das tropas",
         "groupIgnore": "Ignorar aldeias do grupo",
         "groupInclude": "Incluir alvos do grupo",
         "eventsLimit": "Número máximo de registros",
         "others": "Outros",
-        "language": "Linguagem da interface (requer reinício)"
+        "language": "Linguagem da interface (requer reinício)",
+        "groupOnly": "Atacar apenas com aldeias do grupo"
     },
     "events": {
         "nothingYet": "Nada por aqui ainda...",
@@ -61,6 +61,7 @@
         "status": "Status",
         "selectedVillage": "Aldeia selecionada",
         "lastAttack": "Último ataque",
-        "attacking": "Atacando."
+        "attacking": "Atacando.",
+        "noSelectedVillage": "Nenhuma aldeia disponível."
     }
 }

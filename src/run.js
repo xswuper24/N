@@ -68,7 +68,8 @@ if (typeof loadingAutofarm === 'undefined') {
         hotkeys.add('shift+z', start)
     }
 
-    mapScope = angular.element(document.querySelector('#map')).scope()
+    let $map = document.querySelector('#map')
+    let mapScope = angular.element($map).scope()
 
     if (mapScope.isInitialized) {
         init()

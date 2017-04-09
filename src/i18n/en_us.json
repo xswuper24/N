@@ -23,7 +23,7 @@
         "include": "Including targets with a group",
         "include_1": "As well as ignoring villages, you can include village targets of players. All villages out of maximum distance will be ignored.",
         "randomBase": "Random interval base",
-        "randomBase_1": "That interval is a random period of time between each attack avoid the script to be detected by the game. <strong>The bigger the better</strong>.",
+        "randomBase_1": "That interval is a random period of time (in seconds) between each attack avoid the script to be detected by the game. <strong>The bigger the better</strong>.",
         "groupOnly_0": "Using only villages from a group to attack",
         "groupOnly_1": "You can select a specific group to use only the villages from that group to attack.",
         "development": "Development",

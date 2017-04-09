@@ -1,4 +1,4 @@
-AutoFarm.prototype.i18n = function () {
+AutoFarm.prototype.languages = function () {
     let locales = {
         pt_br: @@langs-pt_br,
         en_us: @@langs-en_us

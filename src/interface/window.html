@@ -1,6 +1,6 @@
 <div class="win-content message-list-wrapper searchable-list ng-scope">
     <header class="win-head">
-        <h2 class="ng-binding">{{ title }} <span class="small">v{{ version }}</span></h2>
+        <h2 class="ng-binding">{{ this.title }} <span class="small">v{{ this.version }}</span></h2>
         <ul class="list-btn">
             <li><a href="#" id="autofarm-close" class="size-34x34 btn-red icon-26x26-close"></a></li>
         </ul>
@@ -12,17 +12,17 @@
             <div class="tabs-three-col">
                 <div class="tab" tab="info">
                     <div class="tab-inner">
-                        <div><a href="#" class="btn-icon btn-orange">{{ info }}</a></div>
+                        <div><a href="#" class="btn-icon btn-orange">{{ this.general.info }}</a></div>
                     </div>
                 </div>
                 <div class="tab" tab="settings">
                     <div class="tab-inner">
-                        <div><a href="#" class="btn-icon btn-orange">{{ settings }}</a></div>
+                        <div><a href="#" class="btn-icon btn-orange">{{ this.general.settings }}</a></div>
                     </div>
                 </div>
                 <div class="tab" tab="log">
                     <div class="tab-inner">
-                        <div><a href="#" class="btn-icon btn-orange">{{ events }}</a></div>
+                        <div><a href="#" class="btn-icon btn-orange">{{ this.general.events }}</a></div>
                     </div>
                 </div>
             </div>
@@ -30,41 +30,41 @@
 
         <!-- INFORMAÇÕES -->
         <div class="box-paper footer has-footer-upper autofarm-content-info">
-            <h5 class="twx-section">{{ presets }}</h5>
+            <h5 class="twx-section">{{ this.info.presets }}</h5>
             <div>
-                <p>{{ presets_1 }}</p>
-                <p>{{ presets_2 }}</p>
-                <p>{{ presets_3 }}</p>
-                <p>{{ presets_4 }}</p>
-                <p>{{ presets_5 }}</p>
+                <p>{{ this.info.presets_1 }}</p>
+                <p>{{ this.info.presets_2 }}</p>
+                <p>{{ this.info.presets_3 }}</p>
+                <p>{{ this.info.presets_4 }}</p>
+                <p>{{ this.info.presets_5 }}</p>
             </div>
-            <h5 class="twx-section">{{ ignore }}</h5>
+            <h5 class="twx-section">{{ this.info.ignore }}</h5>
             <div>
-                <p>{{ ignore_1 }}</p>
+                <p>{{ this.info.ignore_1 }}</p>
             </div>
-            <h5 class="twx-section">{{ include }}</h5>
+            <h5 class="twx-section">{{ this.info.include }}</h5>
             <div>
-                <p>{{ include_1 }}</p>
+                <p>{{ this.info.include_1 }}</p>
             </div>
-            <h5 class="twx-section">{{ randomBase }}</h5>
+            <h5 class="twx-section">{{ this.info.randomBase }}</h5>
             <div>
-                <p>{{ randomBase_1 }}</p>
+                <p>{{ this.info.randomBase_1 }}</p>
             </div>
-            <h5 class="twx-section">{{ groupOnly_0 }}</h5>
+            <h5 class="twx-section">{{ this.info.groupOnly_0 }}</h5>
             <div>
-                <p>{{ groupOnly_1 }}</p>
+                <p>{{ this.info.groupOnly_1 }}</p>
             </div>
-            <h5 class="twx-section">{{ development }}</h5>
+            <h5 class="twx-section">{{ this.info.development }}</h5>
             <div class="text-center">
-                <p>{{ development_by }} <a href="https://github.com/mafrazz/">Rafael Mafra</a> &lt;mafrazzrafael@gmail.com&gt;</p>
-                <p>{{ development_open }}</p>
+                <p>{{ this.info.development_by }} <a href="https://github.com/mafrazz/">Rafael Mafra</a> &lt;mafrazzrafael@gmail.com&gt;</p>
+                <p>{{ this.info.development_open }}</p>
             </div>
         </div>
 
         <!-- CONFIGURAÇÕES -->
         <div class="box-paper footer has-footer-upper autofarm-content-settings">
             <form id="autofarm-settings">
-                <h5 class="twx-section">{{ basicSettings }}</h5>
+                <h5 class="twx-section">{{ this.settings.basicSettings }}</h5>
 
                 <table class="tbl-border-light tbl-striped">
                     <colgroup>
@@ -73,49 +73,49 @@
                     </colgroup>
                     <tbody>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ presetName }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.presetName }}</span></td>
                             <td>
                                 <select name="presetName" id="presetName"></select>
                             </td>
                         </tr>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ groupIgnore }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.groupIgnore }}</span></td>
                             <td>
                                 <select name="groupIgnore" id="groupIgnore"></select>
                             </td>
                         </tr>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ groupInclude }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.groupInclude }}</span></td>
                             <td>
                                 <select name="groupInclude" id="groupInclude"></select>
                             </td>
                         </tr>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ groupOnly }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.groupOnly }}</span></td>
                             <td>
                                 <select name="groupOnly" id="groupOnly"></select>
                             </td>
                         </tr>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ maxDistance }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.maxDistance }}</span></td>
                             <td><input name="maxDistance" type="number" class="textfield-border" min="1" max="25" required></td>
                         </tr>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ minDistance }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.minDistance }}</span></td>
                             <td><input name="minDistance" type="number" class="textfield-border" min="0" max="25" required></td>
                         </tr>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ maxTravelTime }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.maxTravelTime }}</span></td>
                             <td><input name="maxTravelTime" type="text" class="textfield-border" pattern="\\d{1,2}:\\d{1,2}:\\d{1,2}" required></td>
                         </tr>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ randomBase }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.randomBase }}</span></td>
                             <td><input name="randomBase" type="number" class="textfield-border" min="0" required></td>
                         </tr>
                     </tbody>
                 </table>
 
-                <h5 class="twx-section">{{ others }}</h5>
+                <h5 class="twx-section">{{ this.settings.others }}</h5>
 
                 <table class="tbl-border-light tbl-striped">
                     <colgroup>
@@ -124,11 +124,11 @@
                     </colgroup>
                     <tbody>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ eventsLimit }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.eventsLimit }}</span></td>
                             <td><input name="eventsLimit" type="number" class="textfield-border" min="1" required></td>
                         </tr>
                         <tr>
-                            <td><span class="ff-cell-fix">{{ language }}</span></td>
+                            <td><span class="ff-cell-fix">{{ this.settings.language }}</span></td>
                             <td>
                                 <select name="language" id="autofarm-language">
                                     <option value="en_us">English</option>
@@ -141,7 +141,7 @@
 
                 <br/>
                 <div class="center">
-                    <input class="btn-orange btn-border" id="autofarm-save" type="submit" value="{{ save }}"/>
+                    <input class="btn-orange btn-border" id="autofarm-save" type="submit" value="{{ this.settings.save }}"/>
                 </div>
             </form>
         </div>
@@ -149,40 +149,40 @@
         <!-- EVENTOS -->
         <div class="box-paper footer has-footer-upper autofarm-content-log">
             <div class="screen-tribe-news rich-text">
-                <h5 class="twx-section">{{ status }}</h5>
+                <h5 class="twx-section">{{ this.events.status }}</h5>
 
                 <table class="tbl-border-light tbl-news tbl-big-header">
                     <colgroup>
-                        <col width="140px">
+                        <col width="125px">
                         <col width="*">
                     </colgroup>
                     <tbody>
                         <tr class="list-item">
-                            <td id="autofarm-status" colspan="2" class="cell-center">{{ paused }}</td>
+                            <td id="autofarm-status" colspan="2" class="cell-center">{{ this.events.paused }}</td>
                         </tr>
                         <tr class="reduced">
-                            <td>{{ selectedVillage }}</td>
+                            <td>{{ this.events.selectedVillage }}</td>
                             <td id="autofarm-selectedVillage"></td>
                         </tr>
                         <tr class="reduced">
-                            <td>{{ lastAttack }}</td>
-                            <td id="autofarm-last">{{ none }}</td>
+                            <td>{{ this.events.lastAttack }}</td>
+                            <td id="autofarm-last">{{ this.general.none }}</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <h5 class="twx-section">{{ events }}</h5>
+                <h5 class="twx-section">{{ this.general.events }}</h5>
 
                 <table class="tbl-border-light tbl-news tbl-big-header">
                     <colgroup>
-                        <col width="140px">
+                        <col width="125px">
                         <col width="*">
                     </colgroup>
                     <tbody id="autofarm-events">
                         <tr class="reduced">
                             <td class="tribe-event-detail" colspan="2">
                                 <div class="text-tribe-news">
-                                    <span>{{ nothingYet }}</span>
+                                    <span>{{ this.events.nothingYet }}</span>
                                 </div>
                             </td>
                         </tr>
@@ -193,7 +193,7 @@
     </div>
     <footer class="win-foot">
         <ul class="list-btn list-center">
-            <li><a class="btn-orange btn-border" id="autofarm-start">{{ start }}</a></li>
+            <li><a class="btn-orange btn-border" id="autofarm-start">{{ this.general.start }}</a></li>
         </ul>
     </footer>
 </div>

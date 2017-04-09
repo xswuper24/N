@@ -23,7 +23,7 @@
         "include": "Incluindo alvos com grupo",
         "include_1": "Assim como ignorar aldeias, você pode incluir como alvos aldeias de jogadores. Todas aldeias do grupo que estiverem fora da distância máxima não seram incluidas.",
         "randomBase": "Base do intervalo aleatório",
-        "randomBase_1": "Esse intervalo é usado para gerar um tempo aleatório entre cada ataque evitando o script ser detectado. <strong>Quanto maior melhor</strong>.",
+        "randomBase_1": "Esse intervalo é usado para gerar um tempo aleatório (em segundos) entre cada ataque evitando o script ser detectado. <strong>Quanto maior melhor</strong>.",
         "groupOnly_0": "Usando apenas aldeias de um grupo para atacar",
         "groupOnly_1": "Você pode selecionar um grupo especifico para usar apenas as aldeias desse grupo para enviar os ataques.",
         "development": "Desenvolvimento",

@@ -169,9 +169,10 @@ function AutoFarm (settings = {}) {
     this.updateExceptionGroups()
     this.updateExceptionVillages()
     this.updatePlayerVillages()
-    this.gameListeners()
-    this.i18n()
-    this.getPresets(false)
+    this.updatePresets()
+    
+    this.listeners()
+    this.languages()
 
     return this
 }
@@ -180,7 +181,7 @@ function AutoFarm (settings = {}) {
  * Inicia os comandos.
  * @return {Boolean}
  */
-AutoFarm.prototype.start = function (silent) {
+AutoFarm.prototype.start = function () {
     if (!this.presets.length) {
         this.event('noPreset')
 
@@ -189,11 +190,8 @@ AutoFarm.prototype.start = function (silent) {
 
     this.running = true
 
-    if (!silent) {
-        this.event('start')
-    }
-
-    this.commandInit()
+    this.event('start')
+    this.command()
     this.keepRunning()
 
     return true
@@ -203,12 +201,10 @@ AutoFarm.prototype.start = function (silent) {
  * Pausa os comandos.
  * @return {Boolean}
  */
-AutoFarm.prototype.pause = function (silent) {
+AutoFarm.prototype.pause = function () {
     this.running = false
     
-    if (!silent) {
-        this.event('pause')
-    }
+    this.event('pause')
 
     clearTimeout(this.commandTimerId)
     clearTimeout(this.keepRunningId)
@@ -227,7 +223,7 @@ AutoFarm.prototype.keepRunning = function () {
 
     this.keepRunningId = setInterval(() => {
         if (!this.commandTimerId) {
-            this.commandInit()
+            this.command()
         }
     }, 60000)
 }
@@ -238,13 +234,7 @@ AutoFarm.prototype.keepRunning = function () {
  * @param {Object} changes - Novas configurações.
  */
 AutoFarm.prototype.updateSettings = function (changes) {
-    let restart = false
     let update = {}
-
-    if (this.running) {
-        restart = true
-        this.pause(true)
-    }
 
     if (changes.groupIgnore !== this.settings.groupIgnore) {
         update.groups = true
@@ -287,16 +277,21 @@ AutoFarm.prototype.updateSettings = function (changes) {
     }
 
     if (update.preset) {
-        this.getPresets()
+        this.updatePresets()
     }
 
     if (update.targets) {
         this.targetList = {}
     }
 
-    if (restart) {
-        this.start(true)
+    this.disableEvents()
+
+    if (this.running) {
+        this.pause()
+        this.start()
     }
+
+    this.disableEvents()
 }
 
 /**
@@ -653,7 +648,7 @@ AutoFarm.prototype.getVillageUnits = function (callback) {
  * Obtem preset apropriado para o script
  * @param {Function} callback
  */
-AutoFarm.prototype.getPresets = function (callback) {
+AutoFarm.prototype.updatePresets = function (callback) {
     let updatePresets = (presets) => {
         this.presets = []
 
@@ -778,9 +773,9 @@ AutoFarm.prototype.updatePlayerVillages = function () {
  * Detecta todas atualizações de dados do jogo que são importantes
  * para o funcionamento do AutoFarm.
  */
-AutoFarm.prototype.gameListeners = function () {
+AutoFarm.prototype.listeners = function () {
     let updatePresets = () => {
-        this.getPresets(false)
+        this.updatePresets()
 
         this.event('presetsChange')
 
@@ -829,7 +824,7 @@ AutoFarm.prototype.gameListeners = function () {
 /**
  * Inicia o ciclo de comandos do script
  */
-AutoFarm.prototype.commandInit = function () {
+AutoFarm.prototype.command = function () {
     if (!this.running) {
         return false
     }
@@ -854,7 +849,7 @@ AutoFarm.prototype.commandInit = function () {
                 this.nextVillage()
             }
 
-            this.commandInit()
+            this.command()
         })
 
         return false
@@ -870,7 +865,7 @@ AutoFarm.prototype.commandInit = function () {
         let hasVillages = this.nextVillage()
 
         if (hasVillages) {
-            this.commandInit()
+            this.command()
         } else {
             this.event('commandLimit')
             this.commandNextReturn()
@@ -885,7 +880,7 @@ AutoFarm.prototype.commandInit = function () {
         let hasVillages = this.nextVillage()
 
         if (hasVillages) {
-            this.commandInit()
+            this.command()
         }
 
         return false
@@ -908,10 +903,10 @@ AutoFarm.prototype.commandInit = function () {
                 this.commandTimerId = setTimeout(() => {
                     this.commandTimerId = false
 
-                    this.commandInit()
+                    this.command()
                 }, backTime + randomTime)
             } else {
-                this.commandInit()
+                this.command()
             }
 
             return false
@@ -923,7 +918,7 @@ AutoFarm.prototype.commandInit = function () {
             // Limite de tempo. Apenas troca o alvo e continua.
             if (preset === 0) {
                 this.nextTarget()
-                this.commandInit()
+                this.command()
 
                 return false
             }
@@ -953,7 +948,7 @@ AutoFarm.prototype.commandInit = function () {
                 this.commandTimerId = setTimeout(() => {
                     this.commandTimerId = false
 
-                    this.commandInit()
+                    this.command()
                 }, interval)
 
                 this.event('nextCommandIn', [interval])
@@ -1000,14 +995,14 @@ AutoFarm.prototype.commandVillageNoUnits = function (commands) {
         this.commandTimerId = setTimeout(() => {
             this.commandTimerId = false
 
-            this.commandInit()
+            this.command()
         }, backTime)
     } else {
         if(!this.nextVillage()) {
             return this.commandNextReturn()
         }
 
-        this.commandInit()
+        this.command()
     }
 }
 
@@ -1019,7 +1014,7 @@ AutoFarm.prototype.commandVillageNoUnits = function (commands) {
  */
 AutoFarm.prototype.sendCommand = function (preset, callback) {
     this.simulate(() => {
-        // Algumas vezes o script é parado depois de .commandInit ter
+        // Algumas vezes o script é parado depois de .command ter
         // iniciado, então uma verificação no final da função pode parar
         // um ataque indesejado.
         if (!this.running) {
@@ -1053,7 +1048,7 @@ AutoFarm.prototype.commandNextReturn = function () {
         this.commandTimerId = false
         
         this.selectVillage(next.vid)
-        this.commandInit()
+        this.command()
     }, next.time)
 
     return true

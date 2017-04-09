@@ -21,7 +21,7 @@ function AutoFarmInterface (autofarm) {
     this.bindEvents()
     this.updateGroupList()
 
-    autofarm.getPresets(() => {
+    autofarm.updatePresets(() => {
         this.updatePresetList()
     })
 
@@ -64,24 +64,19 @@ AutoFarmInterface.prototype.buildStyle = function () {
  * Injeta a estrutura.
  */
 AutoFarmInterface.prototype.buildWindow = function () {
+    this.$wrapper = $('#wrapper')
+
     this.$window = document.createElement('section')
     this.$window.id = 'autofarm-window'
     this.$window.className = 'autofarm-window twx-window screen left'
 
-    let replaces = angular.merge(
-        {
-            title: this.autofarm.lang.title,
-            version: this.autofarm.version
-        },
-        this.autofarm.lang.general,
-        this.autofarm.lang.settings,
-        this.autofarm.lang.events,
-        this.autofarm.lang.info
-    )
+    let replaces = angular.merge({
+        version: this.autofarm.version
+    }, this.autofarm.lang)
 
-    this.$wrapper = $('#wrapper')
+    let html = AutoFarmInterface.TemplateEngine('@@window', replaces)
 
-    this.$window.innerHTML = AutoFarmInterface.replace(replaces, '@@window')
+    this.$window.innerHTML = html
     this.$wrapper.append(this.$window)
 
     this.$button = document.createElement('div')
@@ -319,11 +314,11 @@ AutoFarmInterface.prototype.addEvent = function (options) {
     let $tr = document.createElement('tr')
 
     $tr.className = 'reduced'
-    $tr.innerHTML = AutoFarmInterface.replace({
+    $tr.innerHTML = AutoFarmInterface.TemplateEngine('@@event', {
         date: $filter('readableDateFilter')(Date.now()),
         icon: options.icon,
         text: options.text
-    }, '@@event')
+    })
 
     if (options.links) {
         for (let i = 0; i < links.length; i++) {
@@ -483,11 +478,11 @@ AutoFarmInterface.createButtonLink = function (icon, text, vid) {
     let template = '<a id="l{{ id }}" class="img-link icon-20x20-' + 
         '{{ icon }} btn btn-orange padded">{{ text }}</a>'
 
-    let html = AutoFarmInterface.replace({
+    let html = AutoFarmInterface.TemplateEngine(template, {
         icon: icon,
         text: text,
         id: id
-    }, template)
+    })
 
     let elem = document.createElement('div')
     elem.innerHTML = html
@@ -505,18 +500,44 @@ AutoFarmInterface.createButtonLink = function (icon, text, vid) {
 }
 
 /**
- * Substitui {{ valores }} em um string.
- * @param {Object} values - itens a serem substituidos e valores.
- * @param {String} template - String a ser alterada.
+ * http://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line
  */
-AutoFarmInterface.replace = function (values, template) {
-    let rkey = /\{\{ ([a-zA-Z0-9\-\_]+) \}\}/g
+AutoFarmInterface.TemplateEngine = function (html, options) {
+    let re = /{{(.+?)}}/g
+    let reExp = /(^( )?(var|if|for|else|switch|case|break|{|}|;))(.*)?/g
+    let code = 'with(obj) { var r=[];\n'
+    let cursor = 0
+    let result
+    let match
 
-    template = template.replace(rkey, function (match, key) {
-        return values[key]
-    })
+    let add = function (line, js) {
+        if (js) {
+            code += line.match(reExp)
+                ? line + '\n'
+                : 'r.push(' + line + ');\n'
+        } else {
+            code += line != ''
+                ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n'
+                : ''
+        }
+    }
 
-    return template
+    while(match = re.exec(html)) {
+        add(html.slice(cursor, match.index))
+        add(match[1], true)
+
+        cursor = match.index + match[0].length
+    }
+
+    add(html.substr(cursor, html.length - cursor))
+
+    code = (code + 'return r.join(""); }').replace(/[\r\t\n]/g, ' ')
+
+    try {
+        result = new Function('obj', code).apply(options, [options])
+    } catch (err) {}
+
+    return result
 }
 
 /**

@@ -223,15 +223,13 @@ AutoFarm.prototype.pause = function (silent) {
  * aguardando já).
  */
 AutoFarm.prototype.keepRunning = function () {
-    clearTimeout(this.keepRunningId)
+    clearInterval(this.keepRunningId)
 
-    this.keepRunningId = setTimeout(() => {
-        if (this.commandTimerId) {
-            this.keepRunning()
-        } else {
+    this.keepRunningId = setInterval(() => {
+        if (!this.commandTimerId) {
             this.commandInit()
         }
-    }, 1000 * 60 * 5)
+    }, 60000)
 }
 
 /**

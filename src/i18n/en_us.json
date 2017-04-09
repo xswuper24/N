@@ -38,7 +38,7 @@
         "maxDistance": "Targets maximum distance",
         "minDistance": "Targets minimum distance",
         "maxTravelTime": "Maximum travel time (going)",
-        "randomBase": "Random interval base",
+        "randomBase": "Random interval base (seconds)",
         "presetName": "Preset of troops",
         "groupIgnore": "Ignore villages from group",
         "groupInclude": "Include targets from group",

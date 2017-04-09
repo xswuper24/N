@@ -53,7 +53,9 @@ function AutoFarm (settings = {}) {
         groupInclude: '',
         groupOnly: '',
         eventsLimit: '20',
-        language: ''
+        language: '',
+        keepRunningTrys: '10',
+        keepRunningLoop: '60000'
     }
 
     /**
@@ -166,6 +168,8 @@ function AutoFarm (settings = {}) {
      */
     this.groupOnly = null
 
+    this.keepRunningCount = 0
+
     this.updateExceptionGroups()
     this.updateExceptionVillages()
     this.updatePlayerVillages()
@@ -209,6 +213,9 @@ AutoFarm.prototype.pause = function () {
     clearTimeout(this.commandTimerId)
     clearTimeout(this.keepRunningId)
 
+    this.commandTimerId = false
+    this.keepRunningId = false
+
     return true
 }
 
@@ -221,11 +228,24 @@ AutoFarm.prototype.pause = function () {
 AutoFarm.prototype.keepRunning = function () {
     clearInterval(this.keepRunningId)
 
+    let interval = parseInt(this.settings.keepRunningLoop, 10)
+
     this.keepRunningId = setInterval(() => {
+        console.log('keepRunning()', 'count='+this.keepRunningCount)
+
         if (!this.commandTimerId) {
             this.command()
+        } else {
+            this.keepRunningCount++
+
+            if (this.keepRunningCount >= this.settings.keepRunningTrys) {
+                this.keepRunningCount = 0
+
+                clearTimeout(this.commandTimerId)
+                this.command()
+            }
         }
-    }, 60000)
+    }, interval)
 }
 
 /**
@@ -291,7 +311,7 @@ AutoFarm.prototype.updateSettings = function (changes) {
         this.start()
     }
 
-    this.disableEvents()
+    this.enableEvents()
 }
 
 /**

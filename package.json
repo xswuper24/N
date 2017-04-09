@@ -4,7 +4,7 @@
   "description": "AutoFarm Script para Tribal Wars 2.",
   "homepage": "",
   "author": "Rafael Mafra <mafrazzrafael@gmail.com>",
-  "version": "1.0.0rc",
+  "version": "1.0.1rc",
   "license": "MIT",
   "repository": {
     "type": "git",

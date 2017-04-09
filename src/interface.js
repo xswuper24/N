@@ -45,8 +45,6 @@ function AutoFarmInterface (autofarm) {
         this.openWindow()
     })
 
-
-
     return this
 }
 

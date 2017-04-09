@@ -103,15 +103,21 @@ AutoFarmInterface.prototype.buildWindow = function () {
     this.updateSelectedVillage()
 }
 
+/**
+ * Atualiza o elemento com a data do último ataque enviado
+ * Tambem armazena para ser utilizado nas proximas execuções.
+ */
 AutoFarmInterface.prototype.updateLastAttack = function (lastAttack) {
+    let id = `${player.getId()}_autofarm_lastAttack`
+
     if (!lastAttack) {
-        lastAttack = localStorage[`${player.getId()}_autofarm_lastAttack`]
+        lastAttack = localStorage[id]
 
         if (!lastAttack) {
             return
         }
     } else {
-        localStorage[`${player.getId()}_autofarm_lastAttack`] = lastAttack
+        localStorage[id] = lastAttack
     }
 
     lastAttack = parseInt(lastAttack, 10)
@@ -119,6 +125,9 @@ AutoFarmInterface.prototype.updateLastAttack = function (lastAttack) {
     this.$last.html($filter('readableDateFilter')(lastAttack))
 }
 
+/**
+ * Atualiza o elemento com a aldeias atualmente selecionada
+ */
 AutoFarmInterface.prototype.updateSelectedVillage = function () {
     let selected = this.autofarm.selectedVillage
 

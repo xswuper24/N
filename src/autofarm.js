@@ -674,22 +674,18 @@ AutoFarm.prototype.getVillageUnits = function (callback) {
 /**
  * Obtem preset apropriado para o script
  * @param {Function} callback
- * @param {Object} presets - Parametro interno usado para evitar
- *     repetição de código.
  */
-AutoFarm.prototype.getPresets = function (callback, presets) {
+AutoFarm.prototype.getPresets = function (callback) {
     __debug && console.log('.getPresets()')
 
-    if (!this.settings.presetName) {
-        this.presets = []
-
-        return true
-    }
-
-    if (presets) {
+    let updatePresets = (presets) => {
         this.presets = []
 
         for (let id in presets) {
+            if (!presets.hasOwnProperty(id)) {
+                continue
+            }
+
             if (presets[id].name === this.settings.presetName) {
                 presets[id].units =
                     AutoFarm.cleanPresetUnits(presets[id].units)
@@ -701,18 +697,17 @@ AutoFarm.prototype.getPresets = function (callback, presets) {
         if (callback) {
             callback()
         }
-
-        return true
     }
 
-    if (modelDataService.getPresetList().isLoaded()) {
-        return this.getPresets(callback,
-            modelDataService.getPresetList().presets)
-    }
+    let presetList = modelDataService.getPresetList()
 
-    socketService.emit(routeProvider.GET_PRESETS, {}, (data) => {
-        this.getPresets(callback, data.presets)
-    })
+    if (presetList.isLoaded()) {
+        updatePresets(presetList.presets)
+    } else {
+        socketService.emit(routeProvider.GET_PRESETS, {}, (data) => {
+            updatePresets(data.presets)
+        })
+    }
 }
 
 /**

@@ -34,7 +34,9 @@ if (typeof autofarm === 'undefined') {
     })
 
     let startFarm = function () {
-        if (autofarm.paused) {
+        if (autofarm.running) {
+            autofarm.pause()
+        } else {
             if (!autofarm.presets.length) {
                 $rootScope.$broadcast(eventTypeProvider.MESSAGE_ERROR, {
                     message: autofarm.lang.events.presetFirst
@@ -52,8 +54,6 @@ if (typeof autofarm === 'undefined') {
             }
 
             autofarm.start()
-        } else {
-            autofarm.pause()
         }
     }
 

@@ -28,7 +28,7 @@
         "groupOnly_1": "You can select a specific group to use only the villages from that group to attack.",
         "development": "Development",
         "development_by": "AutoFarm is developed with <span style='color:#ad0202'>❤</span> by",
-        "development_open": "AutoFarm is a <a href='https://github.com/mafrazz/tw2autofarm'>open source</a> software.",
+        "development_open": "AutoFarm is an <a href='https://github.com/mafrazz/tw2autofarm'>open source</a> software.",
         "contact": "Contact"
     },
     "settings": {

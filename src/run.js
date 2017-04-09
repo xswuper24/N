@@ -1,62 +1,78 @@
-if (typeof autofarm === 'undefined') {
-    let settings = localStorage.getItem(`${player.getId()}_autofarm`)
-    settings = settings ? JSON.parse(settings) : {}
+if (typeof loadingAutofarm === 'undefined') {
+    loadingAutofarm = true
 
-    autofarm = new AutoFarm(settings)
-    interface = new AutoFarmInterface(autofarm)
+    let init = function () {
+        player = modelDataService.getSelectedCharacter()
 
-    autofarm.on('start', function () {
-        interface.$start.html(autofarm.lang.general.pause)
-        interface.$start.removeClass('btn-green')
-        interface.$start.addClass('btn-red')
+        let settings
 
-        $rootScope.$broadcast(eventTypeProvider.MESSAGE_SUCCESS, {
-            message: autofarm.lang.general.started
+        settings = localStorage.getItem(`${player.getId()}_autofarm`)
+        settings = settings ? JSON.parse(settings) : {}
+
+        af = new AutoFarm(settings)
+        ui = new AutoFarmInterface(af)
+
+        af.on('start', function () {
+            ui.$start.html(af.lang.general.pause)
+            ui.$start.removeClass('btn-green')
+            ui.$start.addClass('btn-red')
+
+            $rootScope.$broadcast(eventTypeProvider.MESSAGE_SUCCESS, {
+                message: af.lang.general.started
+            })
         })
-    })
 
-    autofarm.on('pause', function () {
-        interface.$start.html(autofarm.lang.general.start)
-        interface.$start.removeClass('btn-red')
-        interface.$start.addClass('btn-green')
+        af.on('pause', function () {
+            ui.$start.html(af.lang.general.start)
+            ui.$start.removeClass('btn-red')
+            ui.$start.addClass('btn-green')
 
-        $rootScope.$broadcast(eventTypeProvider.MESSAGE_SUCCESS, {
-            message: autofarm.lang.general.paused
+            $rootScope.$broadcast(eventTypeProvider.MESSAGE_SUCCESS, {
+                message: af.lang.general.paused
+            })
         })
-    })
 
-    autofarm.on('presetsChange', () => {
-        interface.updatePresetList()
-    })
+        af.on('presetsChange', () => {
+            ui.updatePresetList()
+        })
 
-    autofarm.on('groupsChanged', () => {
-        interface.updateGroupList()
-    })
+        af.on('groupsChanged', () => {
+            ui.updateGroupList()
+        })
 
-    let startFarm = function () {
-        if (autofarm.running) {
-            autofarm.pause()
-        } else {
-            if (!autofarm.presets.length) {
-                $rootScope.$broadcast(eventTypeProvider.MESSAGE_ERROR, {
-                    message: autofarm.lang.events.presetFirst
-                })
+        let start = function () {
+            if (af.running) {
+                af.pause()
+            } else {
+                if (!af.presets.length) {
+                    $rootScope.$broadcast(eventTypeProvider.MESSAGE_ERROR, {
+                        message: af.lang.events.presetFirst
+                    })
 
-                return false
+                    return false
+                }
+
+                if (!af.selectedVillage) {
+                    $rootScope.$broadcast(eventTypeProvider.MESSAGE_ERROR, {
+                        message: af.lang.events.noSelectedVillage
+                    })
+
+                    return false
+                }
+
+                af.start()
             }
-
-            if (!autofarm.selectedVillage) {
-                $rootScope.$broadcast(eventTypeProvider.MESSAGE_ERROR, {
-                    message: autofarm.lang.events.noSelectedVillage
-                })
-
-                return false
-            }
-
-            autofarm.start()
         }
+
+        ui.$start.on('click', start)
+        hotkeys.add('shift+z', start)
     }
 
-    interface.$start.on('click', startFarm)
-    hotkeys.add('shift+z', startFarm)
+    mapScope = angular.element(document.querySelector('#map')).scope()
+
+    if (mapScope.isInitialized) {
+        init()
+    } else {
+        $rootScope.$on(eventTypeProvider.MAP_INITIALIZED, init)
+    }
 }

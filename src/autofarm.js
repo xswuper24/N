@@ -15,7 +15,6 @@ routeProvider = injector.get('routeProvider')
 eventTypeProvider = injector.get('eventTypeProvider')
 armyService = injector.get('armyService')
 math = require('helper/math')
-player = modelDataService.getSelectedCharacter()
 
 /**
  * @class

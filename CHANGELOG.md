@@ -1,7 +1,9 @@
 # History
 
-## Next
+## 1.0.0rc
 - [New] Opção para alterar linguagem da interface.
+- [New] Opção para atacar apenas com aldeias com um grupo específico.
+- [Fix] Todos presets eram selecionados quando nenhum estava especificado nas configurações.
 
 ## 0.11.0beta 08/04/2017
 - [New] Opção para incluir alvos de jogadores a partir de grupos.

@@ -90,7 +90,7 @@ function AutoFarm (settings = {}) {
      * Lista de todos aldeias alvos possíveis para cada aldeia do jogador.
      * @type {Object}
      */
-    this.targetList = {}
+    this.targets = {}
 
     /**
      * Lista com todas aldeias que estão com limite de 50 comandos.
@@ -170,7 +170,7 @@ function AutoFarm (settings = {}) {
     this.updateExceptionVillages()
     this.updatePlayerVillages()
     this.updatePresets()
-    
+
     this.listeners()
     this.languages()
 
@@ -281,7 +281,7 @@ AutoFarm.prototype.updateSettings = function (changes) {
     }
 
     if (update.targets) {
-        this.targetList = {}
+        this.targets = {}
     }
 
     this.disableEvents()
@@ -318,7 +318,7 @@ AutoFarm.prototype.enableEvents = function () {
  */
 AutoFarm.prototype.nextTarget = function (_initial, _noTargets = 0) {
     let sid = this.selectedVillage.getId()
-    let targets = this.targetList[sid]
+    let targets = this.targets[sid]
 
     if (!_initial) {
         targets.index++
@@ -368,7 +368,7 @@ AutoFarm.prototype.getTargets = function (callback) {
     let coords = this.selectedVillage.getPosition()
     let sid = this.selectedVillage.getId()
 
-    if (sid in this.targetList) {
+    if (sid in this.targets) {
         return callback()
     }
 
@@ -429,12 +429,12 @@ AutoFarm.prototype.getTargets = function (callback) {
             return false
         }
 
-        this.targetList[sid] = nearby.sort(function (targetA, targetB) {
+        this.targets[sid] = nearby.sort(function (targetA, targetB) {
             return targetA.distance - targetB.distance
         })
 
-        this.targetList[sid].index = 0
-        this.selectedTarget = this.targetList[sid][0]
+        this.targets[sid].index = 0
+        this.selectedTarget = this.targets[sid][0]
 
         callback()
     })
@@ -839,7 +839,7 @@ AutoFarm.prototype.command = function () {
 
     // Se aldeia ainda não tiver obtido a lista de alvos, obtem
     // os alvos e executa o comando novamente para dar continuidade.
-    let targetsLoaded = this.targetList.hasOwnProperty(sid)
+    let targetsLoaded = this.targets.hasOwnProperty(sid)
 
     if (!targetsLoaded) {
         this.getTargets(() => {

@@ -30,34 +30,34 @@
 
         <!-- INFORMAÇÕES -->
         <div class="box-paper footer has-footer-upper autofarm-content-info">
-            <h5 class="twx-section">{{ this.info.presets }}</h5>
+            <h5 class="twx-section">{{ this.info.presets[0] }}</h5>
             <div>
-                <p>{{ this.info.presets_1 }}</p>
-                <p>{{ this.info.presets_2 }}</p>
-                <p>{{ this.info.presets_3 }}</p>
-                <p>{{ this.info.presets_4 }}</p>
-                <p>{{ this.info.presets_5 }}</p>
+                <p>{{ this.info.presets[1] }}</p>
+                <p>{{ this.info.presets[2] }}</p>
+                <p>{{ this.info.presets[3] }}</p>
+                <p>{{ this.info.presets[4] }}</p>
+                <p>{{ this.info.presets[5] }}</p>
             </div>
-            <h5 class="twx-section">{{ this.info.ignore }}</h5>
+            <h5 class="twx-section">{{ this.info.ignore[0] }}</h5>
             <div>
-                <p>{{ this.info.ignore_1 }}</p>
+                <p>{{ this.info.ignore[1] }}</p>
             </div>
-            <h5 class="twx-section">{{ this.info.include }}</h5>
+            <h5 class="twx-section">{{ this.info.include[0] }}</h5>
             <div>
-                <p>{{ this.info.include_1 }}</p>
+                <p>{{ this.info.include[1] }}</p>
             </div>
-            <h5 class="twx-section">{{ this.info.randomBase }}</h5>
+            <h5 class="twx-section">{{ this.info.randomBase[0] }}</h5>
             <div>
-                <p>{{ this.info.randomBase_1 }}</p>
+                <p>{{ this.info.randomBase[1] }}</p>
             </div>
-            <h5 class="twx-section">{{ this.info.groupOnly_0 }}</h5>
+            <h5 class="twx-section">{{ this.info.groupOnly[0] }}</h5>
             <div>
-                <p>{{ this.info.groupOnly_1 }}</p>
+                <p>{{ this.info.groupOnly[1] }}</p>
             </div>
-            <h5 class="twx-section">{{ this.info.development }}</h5>
+            <h5 class="twx-section">{{ this.info.development[0] }}</h5>
             <div class="text-center">
-                <p>{{ this.info.development_by }} <a href="https://github.com/mafrazz/">Rafael Mafra</a> &lt;mafrazzrafael@gmail.com&gt;</p>
-                <p>{{ this.info.development_open }}</p>
+                <p>{{ this.info.development[1] }} <a href="https://github.com/mafrazz/">Rafael Mafra</a> &lt;mafrazzrafael@gmail.com&gt;</p>
+                <p>{{ this.info.development[2] }}</p>
             </div>
         </div>
 
@@ -106,7 +106,7 @@
                         </tr>
                         <tr>
                             <td><span class="ff-cell-fix">{{ this.settings.maxTravelTime }}</span></td>
-                            <td><input name="maxTravelTime" type="text" class="textfield-border" pattern="\\d{1,2}:\\d{1,2}:\\d{1,2}" required></td>
+                            <td><input name="maxTravelTime" type="text" class="textfield-border" pattern="\\\\d{1,2}:\\\\d{1,2}:\\\\d{1,2}" required></td>
                         </tr>
                         <tr>
                             <td><span class="ff-cell-fix">{{ this.settings.randomBase }}</span></td>
@@ -153,7 +153,7 @@
 
                 <table class="tbl-border-light tbl-news tbl-big-header">
                     <colgroup>
-                        <col width="125px">
+                        <col width="135px">
                         <col width="*">
                     </colgroup>
                     <tbody>

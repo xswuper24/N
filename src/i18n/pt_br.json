@@ -1,67 +1,78 @@
 {
     "title": "Farmador Automático",
+    "events": {
+        "attacking": "Atacando.",
+        "commandLimit": "Limite de 50 ataques atingido, aguardando retorno.",
+        "lastAttack": "Último ataque",
+        "nextVillage": "Alternando para a aldeia {0}",
+        "noPreset": "Nenhuma predefinição foi configurada.",
+        "noSelectedVillage": "Nenhuma aldeia disponível.",
+        "noUnits": "Sem unidades na aldeia, aguardando ataques retornarem.",
+        "noUnitsNoCommands": "Nenhuma aldeia tem tropas nem ataques retornando.",
+        "noVillages": "Nenhuma aldeia disponível, aguardando ataques retornarem.",
+        "nothingYet": "Nada por aqui ainda...",
+        "paused": "Pausado.",
+        "presetFirst": "Configure uma predefinição primeiro!",
+        "selectedVillage": "Aldeia selecionada",
+        "sendCommand": "{0} ataca {1}",
+        "status": "Status"
+    },
     "general": {
-        "info": "Informações",
-        "settings": "Configurações",
+        "disabled": "Desativado",
         "events": "Eventos",
-        "start": "Iniciar",
-        "pause": "Pausar",
+        "info": "Informações",
         "none": "Nenhum",
-        "started": "AutoFarm iniciado.",
+        "pause": "Pausar",
         "paused": "AutoFarm pausado.",
-        "disabled": "Desativado"
+        "settings": "Configurações",
+        "start": "Iniciar",
+        "started": "AutoFarm iniciado."
     },
     "info": {
-        "presets": "Configurando unidades com predefinições",
-        "presets_1": "O AutoFarm utiliza predefinições para enviar os ataques, então é preciso que você selecione uma na aba de configurações.",
-        "presets_2": "Não é preciso ter a predefinição ativada nas aldeias para funcionar.",
-        "presets_3": "Serão usados apenas o número de tropas especificados na predefinição, <strong>oficiais não serão utilizados</strong>.",
-        "presets_4": "É possível alterar a quantidade de tropas na predefinição enquanto o AutoFarm estiver ativado enviando os ataques. Os novos ataques serão enviandos com a nova quantidade especificada.",
-        "presets_5": "É possível utilizar mais de uma predefinição, <strong>desde que tenham o mesmo nome</strong>. O script sempre tentará enviar a primeira da lista. Se a aldeia não possuír o mínimo exigido, então irá tentar a próxima.",
-        "ignore": "Ignorando aldeias com grupo",
-        "ignore_1": "Você pode selecionar um grupo nas configurações para que todas aldeias atribuidas a esse grupo sejam ignorados pelo AutoFarm. <strong>O grupo serve tanto para os alvos quanto para suas aldeias</strong>.",
-        "include": "Incluindo alvos com grupo",
-        "include_1": "Assim como ignorar aldeias, você pode incluir como alvos aldeias de jogadores. Todas aldeias do grupo que estiverem fora da distância máxima não seram incluidas.",
-        "randomBase": "Base do intervalo aleatório",
-        "randomBase_1": "Esse intervalo é usado para gerar um tempo aleatório (em segundos) entre cada ataque evitando o script ser detectado. <strong>Quanto maior melhor</strong>.",
-        "groupOnly_0": "Usando apenas aldeias de um grupo para atacar",
-        "groupOnly_1": "Você pode selecionar um grupo especifico para usar apenas as aldeias desse grupo para enviar os ataques.",
-        "development": "Desenvolvimento",
-        "development_by": "AutoFarm é desenvolvido com <span style='color:#ad0202'>❤</span> por",
-        "development_open": "AutoFarm é um software de <a href='https://github.com/mafrazz/tw2autofarm'>código aberto</a>.",
-        "contact": "Contato"
+        "development": [
+            "Desenvolvimento",
+            "AutoFarm é desenvolvido com <span style='color:#ad0202'>❤</span> por",
+            "AutoFarm é um software de <a href='https://github.com/mafrazz/tw2autofarm'>código aberto</a>."
+        ],
+        "groupOnly": [
+            "Usando apenas aldeias de um grupo para atacar",
+            "Você pode selecionar um grupo especifico para usar apenas as aldeias desse grupo para enviar os ataques."
+        ],
+        "ignore": [
+            "Ignorando aldeias com grupo",
+            "Você pode selecionar um grupo nas configurações para que todas aldeias atribuidas a esse grupo sejam ignorados pelo AutoFarm. <strong>O grupo serve tanto para os alvos quanto para suas aldeias</strong>."
+        ],
+        "include": [
+            "Incluindo alvos com grupo",
+            "Assim como ignorar aldeias, você pode incluir como alvos aldeias de jogadores. Todas aldeias do grupo que estiverem fora da distância máxima não seram incluidas."
+        ],
+        "presets": [
+            "Configurando unidades com predefinições",
+            "O AutoFarm utiliza predefinições para enviar os ataques, então é preciso que você selecione uma na aba de configurações.",
+            "Não é preciso ter a predefinição ativada nas aldeias para funcionar.",
+            "Serão usados apenas o número de tropas especificados na predefinição, <strong>oficiais não serão utilizados</strong>.",
+            "É possível alterar a quantidade de tropas na predefinição enquanto o AutoFarm estiver ativado enviando os ataques. Os novos ataques serão enviandos com a nova quantidade especificada.",
+            "É possível utilizar mais de uma predefinição, <strong>desde que tenham o mesmo nome</strong>. O script sempre tentará enviar a primeira da lista. Se a aldeia não possuír o mínimo exigido, então irá tentar a próxima."
+        ],
+        "randomBase": [
+            "Base do intervalo aleatório",
+            "Esse intervalo é usado para gerar um tempo aleatório (em segundos) entre cada ataque evitando o script ser detectado. <strong>Quanto maior melhor</strong>."
+        ]
     },
     "settings": {
         "basicSettings": "Configurações Básicas",
-        "saved": "Configurações salvas!",
-        "save": "Salvar configurações",
-        "maxDistance": "Distância máxima dos alvos",
-        "minDistance": "Distância mínima dos alvos",
-        "maxTravelTime": "Tempo máximo de viagem (ida)",
-        "randomBase": "Base do intervalo aleatório (segundos)",
-        "presetName": "Predefinição das tropas",
+        "eventsLimit": "Número máximo de registros",
         "groupIgnore": "Ignorar aldeias do grupo",
         "groupInclude": "Incluir alvos do grupo",
-        "eventsLimit": "Número máximo de registros",
-        "others": "Outros",
+        "groupOnly": "Atacar apenas com aldeias do grupo",
         "language": "Linguagem da interface (requer reinício)",
-        "groupOnly": "Atacar apenas com aldeias do grupo"
-    },
-    "events": {
-        "nothingYet": "Nada por aqui ainda...",
-        "sendCommand": "{0} ataca {1}",
-        "nextVillage": "Alternando para a aldeia {0}",
-        "noUnitsNoCommands": "Nenhuma aldeia tem tropas nem ataques retornando.",
-        "noPreset": "Nenhuma predefinição foi configurada.",
-        "presetFirst": "Configure uma predefinição primeiro!",
-        "paused": "Pausado.",
-        "noVillages": "Nenhuma aldeia disponível, aguardando ataques retornarem.",
-        "commandLimit": "Limite de 50 ataques atingido, aguardando retorno.",
-        "noUnits": "Sem unidades na aldeia, aguardando ataques retornarem.",
-        "status": "Status",
-        "selectedVillage": "Aldeia selecionada",
-        "lastAttack": "Último ataque",
-        "attacking": "Atacando.",
-        "noSelectedVillage": "Nenhuma aldeia disponível."
+        "maxDistance": "Distância máxima dos alvos",
+        "maxTravelTime": "Tempo máximo de viagem (ida)",
+        "minDistance": "Distância mínima dos alvos",
+        "others": "Outros",
+        "presetName": "Predefinição das tropas",
+        "randomBase": "Base do intervalo aleatório (segundos)",
+        "save": "Salvar configurações",
+        "saved": "Configurações salvas!"
     }
 }

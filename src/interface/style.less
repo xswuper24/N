@@ -9,6 +9,7 @@
         top: 0px;
         left: 0px;
         width: 60px;
+        height: 24px;
     }
 
     .text {
@@ -81,4 +82,30 @@
     margin: 6px;
     line-height: 24px;
     border: none;
+}
+
+@keyframes autofarmShowStatus {
+    0% {
+        width: 60px;
+    }
+    100% {
+        width: 350px;
+    }
+}
+
+@keyframes autofarmHideStatus {
+    0% {
+        width: 350px;
+    }
+    100% {
+        width: 60px;
+    }
+}
+
+.autofarm-show-status {
+    animation: autofarmShowStatus 0.3s forwards;
+}
+
+.autofarm-hide-status {
+    animation: autofarmHideStatus 0.3s forwards;
 }

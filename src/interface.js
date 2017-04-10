@@ -37,7 +37,7 @@ function AutoFarmInterface (autofarm) {
         this.closeWindow()
     })
 
-    $(this.$button).on('click', () => {
+    this.$button.on('click', () => {
         this.openWindow()
     })
 
@@ -79,12 +79,13 @@ AutoFarmInterface.prototype.buildWindow = function () {
     this.$window.innerHTML = html
     this.$wrapper.append(this.$window)
 
-    this.$button = document.createElement('div')
-    this.$button.id = 'interface-autofarm'
-    this.$button.innerHTML = '@@button'
+    let $buttonWrapper = document.createElement('div')
+    $buttonWrapper.id = 'interface-autofarm'
+    $buttonWrapper.innerHTML = '@@button'
 
-    $('#toolbar-left').prepend(this.$button)
+    $('#toolbar-left').prepend($buttonWrapper)
 
+    this.$button = $('.button', $buttonWrapper)
     this.$scrollbar = jsScrollbar(this.$window.querySelector('.win-main'))
     this.$events = $('#autofarm-events')
     this.$settings = $('#autofarm-settings')
@@ -101,6 +102,7 @@ AutoFarmInterface.prototype.buildWindow = function () {
 
     this.updateLastAttack()
     this.updateSelectedVillage()
+    this.bindQuickview()
 }
 
 /**
@@ -145,6 +147,30 @@ AutoFarmInterface.prototype.updateSelectedVillage = function () {
 
     this.$selected.html('')
     this.$selected.append(selectedVillage.elem)
+}
+
+/**
+ * Mostra informações no botão ao passar o mouse.
+ */
+AutoFarmInterface.prototype.bindQuickview = function () {
+    let $buttonIntern = this.$button.find('.text')
+
+    let langStatus = this.autofarm.lang.events.status
+    let langLast = this.autofarm.lang.events.lastAttack
+
+    this.$button.on('mouseenter', () => {
+        this.$button.addClass('autofarm-show-status')
+        this.$button.removeClass('autofarm-hide-status')
+
+        $buttonIntern.html(`${langLast}: ${this.$last.html()}`)
+    })
+
+    this.$button.on('mouseleave', () => {
+        this.$button.removeClass('autofarm-show-status')
+        this.$button.addClass('autofarm-hide-status')
+
+        $buttonIntern.html('AutoFarm')
+    })
 }
 
 /**

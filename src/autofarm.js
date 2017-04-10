@@ -47,7 +47,7 @@ function AutoFarm (settings = {}) {
         maxDistance: '10',
         minDistance: '0',
         maxTravelTime: '01:00:00',
-        randomBase: '3',
+        randomBase: '3', // segundos
         presetName: '',
         groupIgnore: '',
         groupInclude: '',
@@ -55,7 +55,8 @@ function AutoFarm (settings = {}) {
         eventsLimit: '20',
         language: '',
         keepRunningTrys: '10',
-        keepRunningLoop: '60000'
+        keepRunningLoop: '1', // minutos,
+        indexExpire: '30' // minutos
     }
 
     /**
@@ -168,12 +169,24 @@ function AutoFarm (settings = {}) {
      */
     this.groupOnly = null
 
+    /**
+     * Contagem de tentativas para reiniciar os comandos caso tenho
+     *     tenha ocorrido algum erro por parte do servidor.
+     * @type {Number}
+     */
     this.keepRunningCount = 0
+
+    /**
+     * Armazena todos indices dos alvos
+     * @type {Object}
+     */
+    this.indexes = null
 
     this.updateExceptionGroups()
     this.updateExceptionVillages()
     this.updatePlayerVillages()
     this.updatePresets()
+    this.updateIndexes()
 
     this.listeners()
     this.languages()
@@ -229,10 +242,9 @@ AutoFarm.prototype.keepRunning = function () {
     clearInterval(this.keepRunningId)
 
     let interval = parseInt(this.settings.keepRunningLoop, 10)
+    interval = 1000 * 60 * interval
 
     this.keepRunningId = setInterval(() => {
-        console.log('keepRunning()', 'count='+this.keepRunningCount)
-
         if (!this.commandTimerId) {
             this.command()
         } else {
@@ -341,17 +353,19 @@ AutoFarm.prototype.nextTarget = function (_initial, _noTargets = 0) {
     let targets = this.targets[sid]
 
     if (!_initial) {
-        targets.index++
+        this.indexes[sid]++
     }
 
-    let i = targets.index
+    let i = this.indexes[sid]
 
-    if (typeof targets[i] !== 'undefined') {
+    if (targets[i]) {
         this.selectedTarget = targets[i]
     } else {
         this.selectedTarget = targets[0]
-        targets.index = 0
+        this.indexes[sid] = 0
     }
+
+    this.saveIndexes()
 
     let target = this.selectedTarget
 
@@ -453,7 +467,11 @@ AutoFarm.prototype.getTargets = function (callback) {
             return targetA.distance - targetB.distance
         })
 
-        this.targets[sid].index = 0
+        if (typeof this.indexes[sid] === 'undefined') {
+            this.indexes[sid] = 0
+            this.saveIndexes()
+        }
+
         this.selectedTarget = this.targets[sid][0]
 
         callback()
@@ -515,6 +533,43 @@ AutoFarm.prototype.selectVillage = function (vid) {
     }
 
     return false
+}
+
+/**
+ * Carrega os indices localmente, mas só os usa caso não tenha expirado ainda.
+ */
+AutoFarm.prototype.updateIndexes = function () {
+    let id = `${player.getId()}_autofarm_indexes`
+
+    let plain = localStorage[id]
+    let expire = this.settings.indexExpire * 1000 * 60
+
+    if (!plain) {
+        this.indexes = {}
+
+        return
+    }
+
+    this.indexes = JSON.parse(plain)
+
+    let last = this.indexes.last
+    let now = Date.now()
+
+    if (now - last > expire) {
+        localStorage.removeItem(id)
+
+        this.indexes = {}
+    }
+}
+
+/**
+ * Salva os indices localmente.
+ */
+AutoFarm.prototype.saveIndexes = function () {
+    let id = `${player.getId()}_autofarm_indexes`
+
+    this.indexes.last = Date.now()
+    localStorage[id] = JSON.stringify(this.indexes)
 }
 
 /**

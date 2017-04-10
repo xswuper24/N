@@ -101,7 +101,7 @@ function AutoFarm (settings = {}) {
      * Nota: tempo em milisegundos.
      * @type {Object}
      */
-    this.villagesNextReturn = {}
+    this.returningTimes = {}
 
     /**
      * Armazena o id do comando que está sendo enviado
@@ -508,7 +508,7 @@ AutoFarm.prototype.nextVillage = function (_loop = 0) {
         return this.nextVillage(++_loop)
     }
 
-    if (this.selectedVillage.getId() in this.villagesNextReturn) {
+    if (this.selectedVillage.getId() in this.returningTimes) {
         return this.nextVillage(++_loop)
     }
 
@@ -934,7 +934,7 @@ AutoFarm.prototype.command = function () {
     
     // Verifica se a aldeia esta na lista de espera por limite de 50 comandos
     // ou não ter unidades sulficientes.
-    let isWaiting = this.villagesNextReturn.hasOwnProperty(sid)
+    let isWaiting = this.returningTimes.hasOwnProperty(sid)
 
     if (isWaiting) {
         let hasVillages = this.nextVillage()
@@ -972,7 +972,7 @@ AutoFarm.prototype.command = function () {
             // aguardará o retorno do comando mais próximo e
             // reinicia a função.
             if (this.uniqueVillage) {
-                let backTime = this.villagesNextReturn[sid]
+                let backTime = this.returningTimes[sid]
                 let randomTime = AutoFarm.randomSeconds(5) * 1000
 
                 this.commandTimerId = setTimeout(() => {
@@ -1042,10 +1042,10 @@ AutoFarm.prototype.getNextReturn = function (commands) {
     let vid = this.selectedVillage.getId()
     let backIn = this.getNeabyCommand(commands)
 
-    this.villagesNextReturn[vid] = backIn
+    this.returningTimes[vid] = backIn
 
     setTimeout(() => {
-        delete this.villagesNextReturn[vid]
+        delete this.returningTimes[vid]
 
         this.event('commandReturn', [vid])
     }, backIn)
@@ -1137,10 +1137,10 @@ AutoFarm.prototype.commandNextReturn = function () {
 AutoFarm.prototype.nextVillageUnits = function () {
     let villages = []
 
-    for (let vid in this.villagesNextReturn) {
+    for (let vid in this.returningTimes) {
         villages.push({
             vid: vid,
-            time: this.villagesNextReturn[vid]
+            time: this.returningTimes[vid]
         })
     }
 

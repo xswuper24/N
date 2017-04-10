@@ -56,7 +56,6 @@
         -webkit-appearance: none;
         -moz-appearance: none;
         outline: none;
-
         background-image: url(https://i.imgur.com/SlaWRrX.png), url(http://i.imgur.com/e2qKrmX.png);
         background-repeat: no-repeat, repeat;
         background-position: 293px -3px, top left;
@@ -67,8 +66,51 @@
         text-align: center;
     }
 
-    tr.reduced {
+    .reduced {
         height: 30px;
+    }
+
+    .jackpot {
+        border: 1px solid #000;
+        margin: 0 0 1px 0;
+        line-height: 22px;
+        height: 24px;
+        position: relative;
+        color: #ffecd8;
+        text-shadow: 1px 1px 1px #000;
+        box-shadow: inset 0 0 0 1px rgba(218,125,103,0.5);
+        background: url(http://i.imgur.com/e2qKrmX.png), -webkit-linear-gradient(left, #791d19 0%, #c53b34 50%, #791d19 100%);
+        background: url(http://i.imgur.com/e2qKrmX.png), -moz-linear-gradient(left, #791d19 0%, #c53b34 50%, #791d19 100%);
+
+        &:after,
+        &:before {
+            top: 0;
+            position: absolute;
+            content: " ";
+            display: block;
+            width: 40px;
+            height: 24px;
+            background-image: url(http://i.imgur.com/yRBriWy.png)
+        }
+
+        &:after {
+            background-position: top right;
+            right: 0;
+        }
+
+        &:before {
+            background-position: top left;
+            left: 0;
+        }
+    }
+
+    .promo {
+        text-align: center;
+        font-size: 15px;
+
+        p {
+            margin: 5px 0;
+        }
     }
 }
 

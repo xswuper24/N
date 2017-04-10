@@ -17,7 +17,7 @@
         "sendCommand": "{0} attack {1}",
         "status": "Status"
     },
-    "general": {  
+    "general": {
         "disabled": "Disabled",
         "events": "Task Logs",
         "info": "Information",
@@ -28,7 +28,12 @@
         "start": "Start",
         "started": "AutoFarm started."
     },
-    "info": {  
+    "info": {
+        "customScripts": [
+            "$$$ Custom Scripts $$$",
+            "Would you like to have exclusive scripts with the features you want?",
+            "Send a email to <b>mafrazzrafael@gmail.com</b> and check prices."
+        ],
         "development": [  
             "Development",
             "AutoFarm is developed with <span style='color:#ad0202'>❤</span> by",

@@ -357,7 +357,7 @@ AutoFarm.prototype.enableEvents = function () {
  */
 AutoFarm.prototype.nextTarget = function (_initial, _noTargets = 0) {
     let sid = this.selectedVillage.getId()
-    
+
     // Caso a lista de alvos seja resetada no meio da execução.
     if (!this.targets.hasOwnProperty(sid)) {
         this.command()

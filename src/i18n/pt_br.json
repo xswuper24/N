@@ -29,6 +29,11 @@
         "started": "AutoFarm iniciado."
     },
     "info": {
+        "customScripts": [
+            "$$$ Scripts Personalizados $$$",
+            "Gostaria de ter scripts exclusivos com as funcionalidades quer você quiser?",
+            "Mande um email para <b>mafrazzrafael@gmail.com</b> e veja preços."
+        ],
         "development": [
             "Desenvolvimento",
             "AutoFarm é desenvolvido com <span style='color:#ad0202'>❤</span> por",

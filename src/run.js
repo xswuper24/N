@@ -1,3 +1,8 @@
+loadingAutofarm = undefined
+$('#interface-autofarm').remove()
+$('#autofarm-window').remove()
+$('#autofarm-style').remove()
+
 if (typeof loadingAutofarm === 'undefined') {
     loadingAutofarm = true
 

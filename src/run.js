@@ -14,8 +14,8 @@ if (typeof loadingAutofarm === 'undefined') {
 
         af.on('start', function () {
             ui.$start.html(af.lang.general.pause)
-            ui.$start.removeClass('btn-green')
-            ui.$start.addClass('btn-red')
+            ui.$start.removeClass('btn-green').addClass('btn-red')
+            ui.$button.removeClass('btn-green').addClass('btn-red')
 
             $rootScope.$broadcast(eventTypeProvider.MESSAGE_SUCCESS, {
                 message: af.lang.general.started
@@ -24,8 +24,8 @@ if (typeof loadingAutofarm === 'undefined') {
 
         af.on('pause', function () {
             ui.$start.html(af.lang.general.start)
-            ui.$start.removeClass('btn-red')
-            ui.$start.addClass('btn-green')
+            ui.$start.removeClass('btn-red').addClass('btn-green')
+            ui.$button.removeClass('btn-red').addClass('btn-green')
 
             $rootScope.$broadcast(eventTypeProvider.MESSAGE_SUCCESS, {
                 message: af.lang.general.paused

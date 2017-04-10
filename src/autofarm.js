@@ -31,6 +31,13 @@ math = require('helper/math')
  * @param {Number} settings.eventsLimit - Limite de registros na aba Eventos.
  * @param {String} settings.groupInclude - Nome do grupo que permite alvos
  *     que não sejam abandonadas sejam atacados.
+ * @param {String} language - Linguagem da interface.
+ * @param {Number} keepRunningTrys - Tolerancia de tentativas para recomeçar os
+ *     comandos caso algum erro interno do jogo aconteça.
+ * @param {Number} keepRunningLoop - Tempo em minutos para cada tentativa de
+ *     recomeçar os comandos.
+ * @param {Number} indexExpire - Tempo em minutos para que os índices dos alvos
+ *     sejam resetados.
  */
 function AutoFarm (settings = {}) {
     /**
@@ -350,6 +357,14 @@ AutoFarm.prototype.enableEvents = function () {
  */
 AutoFarm.prototype.nextTarget = function (_initial, _noTargets = 0) {
     let sid = this.selectedVillage.getId()
+    
+    // Caso a lista de alvos seja resetada no meio da execução.
+    if (!this.targets.hasOwnProperty(sid)) {
+        this.command()
+
+        return
+    }
+
     let targets = this.targets[sid]
 
     if (!_initial) {
@@ -878,6 +893,12 @@ AutoFarm.prototype.listeners = function () {
         }
     }
 
+    let updateIncludes = (event, data) => {
+        if (this.groupInclude.id === data.group_id) {
+            this.targets = {}
+        }
+    }
+
     // Detecta todos comandos enviados no jogo (não apenas pelo script)
     // e identifica os que foram enviados pelo script.
     // Por que isso?
@@ -894,6 +915,12 @@ AutoFarm.prototype.listeners = function () {
     $rootScope.$on(eventTypeProvider.GROUPS_UPDATED, updateGroups)
     $rootScope.$on(eventTypeProvider.GROUPS_CREATED, updateGroups)
     $rootScope.$on(eventTypeProvider.GROUPS_DESTROYED, updateGroups)
+
+    // Detecta grupos que foram adicionados nas aldeias.
+    // Caso seja o grupo de includes do script, reseta a lista de alvos
+    // para que a nova aldeia seja incluida.
+    $rootScope.$on(eventTypeProvider.GROUPS_VILLAGE_LINKED, updateIncludes)
+    $rootScope.$on(eventTypeProvider.GROUPS_VILLAGE_UNLINKED, updateIncludes)
 }
 
 /**
